@@ -1,0 +1,1 @@
+LOAD DATA INFILE 'words.txt' IGNORE INTO TABLE words (word)

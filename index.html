@@ -3,15 +3,86 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
+        <title>Word Finder</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
               crossorigin="anonymous">
     </head>
     <body>
-        <h1>Hello, world!</h1>
+
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Поиск слов по маске
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="search.php">
+                                <div class="form-group mb-3">
+                                    <label for="mask">Маска слова:</label>
+                                    <input type="text" class="form-control" id="mask" name="mask"
+                                           placeholder="Введите маску слова">
+                                </div>
+                                <!--<div class="form-group mb-3">
+                                    <label for="length">Длина слова:</label>
+                                    <input type="text" class="form-control" id="length" name="length" placeholder="Введите длину слова">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="start">Начало слова:</label>
+                                    <input type="text" class="form-control" id="start" name="start" placeholder="Введите начало слова">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="end">Конец слова:</label>
+                                    <input type="text" class="form-control" id="end" name="end" placeholder="Введите конец слова">
+                                </div>-->
+                                <button type="submit" class="btn btn-primary">Найти</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Контейнер для вывода результатов запроса -->
+            <div id="search-results"></div>
+        </div>
+
+        <!--        <div class="container">
+                    <h1>Поиск слов в базе данных</h1>
+                    <form action="search.php" method="post">
+                        <div class="form-group">
+                            <label for="mask">Маска слова:</label>
+                            <input type="text" class="form-control" id="mask" name="mask" placeholder="Введите маску слова">
+                        </div>
+                        <button type="submit" class="btn btn-default">Найти слова</button>
+                    </form>
+                </div>-->
+
+        <!-- Bootstrap and jQuery scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
                 crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+                integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+        <script>
+            $(document).ready(function() {
+                // Отправляем данные формы на сервер
+                $("form").submit(function(event) {
+                    event.preventDefault(); // Отменяем стандартное поведение формы
+
+                    // Получаем введенную маску слова
+                    var search = $("#mask").val();
+
+                    // Отправляем AJAX-запрос на сервер
+                    $.post("search.php", {mask: search}, function(data) {
+                        // Выводим результаты запроса
+                        $("#search-results").html(data);
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
