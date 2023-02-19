@@ -1,10 +1,5 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $mask = $_POST["mask"];
-//    $length = $_POST["length"];
-//    $start = $_POST["start"];
-//    $end = $_POST["end"];
-
     // Создаем подключение к базе данных
     $servername = "localhost";
     $username = "root";
@@ -17,23 +12,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Ошибка подключения: " . $conn->connect_error);
     }
 
-    // Строим SQL-запрос на поиск слов
-    $sql = "SELECT * FROM words WHERE word LIKE '$mask'";
+    $mode = $_POST["mode"];
+    $data = json_decode($_POST['data'], true);
+    $query = "SELECT * FROM words WHERE ";
 
-//    if (!empty($length)) {
-//        $sql .= " AND LENGTH(word) = $length";
-//    }
-//
-//    if (!empty($start)) {
-//        $sql .= " AND word LIKE '$start%'";
-//    }
-//
-//    if (!empty($end)) {
-//        $sql .= " AND word LIKE '%$end'";
-//    }
+    if ($mode == "normal") {
+        $mask = $data[0];
+        $mask = str_replace('?', '_', $mask);
+        $mask = str_replace('*', '%', $mask);
+        $query .= "word LIKE '$mask'";
+    } else if ($mode == "extended") {
+        $length = $data[0];
+        $start = $data[1];
+        $end = $data[2];
+        $query .= "CHAR_LENGTH(word) = $length AND word LIKE '$start%' AND word LIKE '%$end'";
+    }
 
     // Выполняем запрос и обрабатываем результат
-    $result = $conn->query($sql);
+    $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
         echo "<div class='container mt-3'>";
