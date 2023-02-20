@@ -25,8 +25,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $length = $data[0];
         $start = $data[1];
         $end = $data[2];
-        $query .= "CHAR_LENGTH(word) = $length AND word LIKE '$start%' AND word LIKE '%$end'";
+        $contains = $data[3];
+        $contains = str_replace('?', '_', $contains);
+        $exclude = $data[4];
+
+        if (!empty($length)) $query .= "CHAR_LENGTH(word) = $length AND ";
+        //if (!empty($start) || !empty($contains) || !empty($end)) $query .= "word LIKE '$start%$contains%$end' ";
+        $query .= "word LIKE '$start%$contains%$end' ";
+        if (!empty($exclude)) $query .= "AND word NOT REGEXP '[$exclude]'";
     }
+    //echo $query;
 
     // Выполняем запрос и обрабатываем результат
     $result = $conn->query($query);

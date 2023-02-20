@@ -44,6 +44,16 @@
                                     <label for="end">Конец слова:</label>
                                     <input type="text" class="form-control" id="end" name="end" placeholder="Введите конец слова">
                                 </div>
+                                <div class="form-group mb-3">
+                                    <label for="contains">Обязательное буквосочетание:</label>
+                                    <input type="text" class="form-control" id="contains" name="contains" placeholder="Введите обязательное буквосочетание">
+                                    <small id="containsHelp" class="form-text text-muted">Указанное буквосочетание содержится в слове в указанном поряде(БЛ - яБЛоко) или в определённых позициях (Б?О - яБлОко)</small>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="exclude">Исключить буквы:</label>
+                                    <input type="text" class="form-control" id="exclude" name="exclude" placeholder="Введите буквы, которые надо исключить">
+                                    <small id="excludeHelp" class="form-text text-muted">Будут выведены только те слова, которые не содержат введённые буквы</small>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Найти</button>
                             </form>
                         </div>

@@ -1,19 +1,35 @@
 $(document).ready(function () {
-    // Отправляем данные формы на сервер
+    // Обработчик отправки данных формы на сервер
     $("form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
         // Получаем введенную маску слова
         let mode = $("input[name='mode']:checked").val();
-        var data = [];
+        let data = [];
         data['mode'] = mode;
         if (mode === 'normal') {
-            data = [$("#mask").val()];
+            let mask = $("#mask").val();
+            if (mask === '') {
+                alert("Введите маску слова!");
+                return;
+            }
+            data = [mask];
         } else if (mode === 'extended') {
+            let length = $("#length").val(),
+                start = $("#start").val(),
+                end = $("#end").val(),
+                contains = $("#contains").val(),
+                exclude = $("#exclude").val();
+            if (start === '' && end === '' && contains === '') {
+                alert("Заполните хотя бы одно из основных полей: начало слова, конец слова или обязательное буквосочетание.");
+                return;
+            }
             data = [
-                $("#length").val(),
-                $("#start").val(),
-                $("#end").val()
+                length,
+                start,
+                end,
+                contains,
+                exclude
             ];
         }
 
@@ -22,6 +38,23 @@ $(document).ready(function () {
             // Выводим результаты запроса
             $("#search-results").html(response);
         });
+    });
+
+    // Обработчик ввода в поле маски
+    $('input[type="text"]').on('input', function() {
+        let text = $(this).val();
+        let input = $(this).attr('id');
+        switch (input) {
+            case 'mask':
+                $(this).val(text.replace(/[^а-я?*]/gi, ''));
+                break;
+            case 'contains':
+                $(this).val(text.replace(/[^а-я?]/gi, ''));
+                break;
+            default:
+                $(this).val(text.replace(/[^а-я]/gi, ''));
+                break;
+        }
     });
 
     checkForMode(document.getElementById("mode-normal"));
@@ -35,19 +68,15 @@ function checkForMode(obj) {
         $('#length').prop('disabled', true);
         $('#start').prop('disabled', true);
         $('#end').prop('disabled', true);
-
-        // $('#length').hide();
-        // $('#start').hide();
-        // $('#end').hide();
+        $('#contains').prop('disabled', true);
+        $('#exclude').prop('disabled', true);
     } else if (mode === 'extended') {
         // Включаем все поля, кроме поля для ввода маски
         $('#mask').prop('disabled', true);
         $('#length').prop('disabled', false);
         $('#start').prop('disabled', false);
         $('#end').prop('disabled', false);
-
-        // $('#length').show();
-        // $('#start').show();
-        // $('#end').show();
+        $('#contains').prop('disabled', false);
+        $('#exclude').prop('disabled', false);
     }
 }
