@@ -15,7 +15,7 @@
                     <div class="card">
                         <div class="card-header">Поиск слов</div>
                         <div class="card-body">
-                            <form method="POST" action="search.php">
+                            <form id="search-form">
                                 <div class="form-group mb-3">
                                     <label>Режим поиска:</label><br>
                                     <div class="form-check form-check-inline">
@@ -29,20 +29,20 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="mask">Маска слова:</label>
-                                    <input type="text" class="form-control" id="mask" name="mask" placeholder="Введите маску">
+                                    <input type="text" class="form-control" id="mask" name="mask" placeholder="Введите маску" maxlength="32" required>
                                     <small id="maskHelp" class="form-text text-muted">? - любая буква; * - любые несколько букв. Пример: А???? - слова из 5 букв на А.</small>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="length">Длина слова:</label>
-                                    <input type="number" class="form-control" id="length" name="length" placeholder="Введите длину слова">
+                                    <input type="number" class="form-control" id="length" name="length" placeholder="Введите длину слова" min="2" max="32" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="start">Начало слова:</label>
-                                    <input type="text" class="form-control" id="start" name="start" placeholder="Введите начало слова">
+                                    <input type="text" class="form-control" id="start" name="start" placeholder="Введите начало слова" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="end">Конец слова:</label>
-                                    <input type="text" class="form-control" id="end" name="end" placeholder="Введите конец слова">
+                                    <input type="text" class="form-control" id="end" name="end" placeholder="Введите конец слова" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="contains">Обязательное буквосочетание:</label>

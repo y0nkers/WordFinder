@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // Обработчик отправки данных формы на сервер
-    $("form").submit(function (event) {
+    $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
         // Получаем введенную маску слова
@@ -9,10 +9,6 @@ $(document).ready(function () {
         data['mode'] = mode;
         if (mode === 'normal') {
             let mask = $("#mask").val();
-            if (mask === '') {
-                alert("Введите маску слова!");
-                return;
-            }
             data = [mask];
         } else if (mode === 'extended') {
             let length = $("#length").val(),
@@ -20,10 +16,6 @@ $(document).ready(function () {
                 end = $("#end").val(),
                 contains = $("#contains").val(),
                 exclude = $("#exclude").val();
-            if (start === '' && end === '' && contains === '') {
-                alert("Заполните хотя бы одно из основных полей: начало слова, конец слова или обязательное буквосочетание.");
-                return;
-            }
             data = [
                 length,
                 start,
@@ -34,7 +26,7 @@ $(document).ready(function () {
         }
 
         // Отправляем AJAX-запрос на сервер
-        $.post("search.php", {mode: mode, data: JSON.stringify(data)}, function (response) {
+        $.post("core/search.php", {mode: mode, data: JSON.stringify(data)}, function (response) {
             // Выводим результаты запроса
             $("#search-results").html(response);
         });
@@ -45,12 +37,15 @@ $(document).ready(function () {
         let text = $(this).val();
         let input = $(this).attr('id');
         switch (input) {
-            case 'mask':
+            case "mask":
                 $(this).val(text.replace(/[^а-я?*]/gi, ''));
                 break;
-            case 'contains':
+            case "start":
+            case "end":
+            case "contains":
                 $(this).val(text.replace(/[^а-я?]/gi, ''));
                 break;
+            case "exclude":
             default:
                 $(this).val(text.replace(/[^а-я]/gi, ''));
                 break;
