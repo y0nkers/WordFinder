@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
-        // Получаем введенную маску слова
+        // Получаем введённые данные с полей
         let mode = $("input[name='mode']:checked").val();
         let data = [];
         data['mode'] = mode;
@@ -11,30 +11,43 @@ $(document).ready(function () {
             let mask = $("#mask").val();
             data = [mask];
         } else if (mode === 'extended') {
-            let length = $("#length").val(),
-                start = $("#start").val(),
-                end = $("#end").val(),
-                contains = $("#contains").val(),
-                exclude = $("#exclude").val();
-            data = [
-                length,
-                start,
-                end,
-                contains,
-                exclude
-            ];
+            let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
+                contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
+            data = [length, start, end, contains, include, exclude];
+            if (hasDuplicates(include, exclude)) {
+                alert('Буквы в полях "Обязательные буквы" и "Исключённые буквы" должны различаться!');
+                return;
+            }
         }
 
         // Отправляем AJAX-запрос на сервер
-        $.post("core/search.php", {mode: mode, data: JSON.stringify(data)}, function (response) {
-            // Выводим результаты запроса
-            $("#search-results").html(response);
+        $.ajax({
+            url: 'core/search.php',
+            method: 'GET',
+            dataType: 'json',
+            contentType: false,
+            cache: false,
+            data: {mode: mode, data: JSON.stringify(data)},
+            success: function(response) {
+                // Выводим результаты запроса
+                if (response.status === false) {
+                    alert(response.message);
+                }
+                else {
+                    console.log(response.query);
+                    $("#search-results").html(response.message);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText); // выводим ответ сервера
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+            }
         });
     });
 
-    // Обработчик ввода в поле маски
-    $('input[type="text"]').on('input', function() {
-        let text = $(this).val();
+    // Обработчик ввода в поле параметров
+    $('input[type="text"]').on('input', function () {
+        let text = $(this).val().toUpperCase();
         let input = $(this).attr('id');
         switch (input) {
             case "mask":
@@ -45,9 +58,17 @@ $(document).ready(function () {
             case "contains":
                 $(this).val(text.replace(/[^а-я?]/gi, ''));
                 break;
+            case "include":
             case "exclude":
-            default:
+                // Проверка на повторяющиеся символы
+                let char = text.slice(-1);
+                if (text.length > 1 && text.indexOf(char) !== text.lastIndexOf(char)) {
+                    $(this).val(text.slice(0, -1));
+                    return false;
+                }
                 $(this).val(text.replace(/[^а-я]/gi, ''));
+                break;
+            default:
                 break;
         }
     });
@@ -55,6 +76,7 @@ $(document).ready(function () {
     checkForMode(document.getElementById("mode-normal"));
 });
 
+// Обработчик смены режима поиска
 function checkForMode(obj) {
     let mode = obj.value;
     if (mode === 'normal') {
@@ -64,6 +86,7 @@ function checkForMode(obj) {
         $('#start').prop('disabled', true);
         $('#end').prop('disabled', true);
         $('#contains').prop('disabled', true);
+        $('#include').prop('disabled', true);
         $('#exclude').prop('disabled', true);
     } else if (mode === 'extended') {
         // Включаем все поля, кроме поля для ввода маски
@@ -72,6 +95,18 @@ function checkForMode(obj) {
         $('#start').prop('disabled', false);
         $('#end').prop('disabled', false);
         $('#contains').prop('disabled', false);
+        $('#include').prop('disabled', false);
         $('#exclude').prop('disabled', false);
     }
+}
+
+// Проверка двух строк на наличие одинаковых символов
+function hasDuplicates(str1, str2) {
+    const set = new Set(str1);
+    for (let i = 0; i < str2.length; i++) {
+        if (set.has(str2[i])) {
+            return true;
+        }
+    }
+    return false;
 }

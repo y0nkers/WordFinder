@@ -4,9 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Word Finder</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-              crossorigin="anonymous">
+        <link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     </head>
     <body>
         <div class="container mt-5">
@@ -50,7 +49,12 @@
                                     <small id="containsHelp" class="form-text text-muted">Указанное буквосочетание содержится в слове в указанном поряде(БЛ - яБЛоко) или в определённых позициях (Б?О - яБлОко)</small>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="exclude">Исключить буквы:</label>
+                                    <label for="include">Обязательные буквы:</label>
+                                    <input type="text" class="form-control" id="include" name="include" placeholder="Введите обязательные буквы">
+                                    <small id="includeHelp" class="form-text text-muted">Будут выведены только те слова, которые содержат введённые буквы</small>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="exclude">Исключённые буквы:</label>
                                     <input type="text" class="form-control" id="exclude" name="exclude" placeholder="Введите буквы, которые надо исключить">
                                     <small id="excludeHelp" class="form-text text-muted">Будут выведены только те слова, которые не содержат введённые буквы</small>
                                 </div>

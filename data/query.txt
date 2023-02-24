@@ -2,3 +2,17 @@ LOAD DATA INFILE 'words.txt' IGNORE INTO TABLE words (word)
 SELECT * FROM `words` WHERE CHAR_LENGTH(word) = 5 AND word LIKE 'г%мм%а' AND word NOT LIKE '%е%' AND word NOT LIKE '%у%' // Много операторов not like
 SELECT * FROM `words` WHERE CHAR_LENGTH(word) = 5 AND word REGEXP '^г.{2}мм.{1}а$' AND word NOT LIKE '%е%' AND word NOT LIKE '%у%' //regexp медленно
 SELECT * FROM `words` WHERE CHAR_LENGTH(word) = 5 AND word LIKE 'г%мм%а' AND word NOT REGEXP '[еу]' // Оптимальный вариант: LIKE для start&contains&end, REGEXP для exclude
+
+SELECT * FROM words 
+WHERE CHAR_LENGTH(word) = 6 
+AND word LIKE 'а%%а'
+AND word REGEXP '(?=.*е)(?=.*п)'
+AND word NOT REGEXP '[вк]'
+// regexp на включение букв е и п. upd. медленее чем запрос ниже
+
+SELECT * FROM words 
+WHERE CHAR_LENGTH(word) = 6 
+AND word LIKE 'а%%а'
+AND word LIKE '%е%' AND word LIKE '%п%'
+AND word NOT REGEXP '[вк]'
+// быстрее, но запрос длиннее
