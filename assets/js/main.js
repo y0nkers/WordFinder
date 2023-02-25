@@ -28,17 +28,16 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: {mode: mode, data: JSON.stringify(data)},
-            success: function(response) {
+            success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {
                     alert(response.message);
-                }
-                else {
+                } else {
                     console.log(response.query);
-                    $("#search-results").html(response.message);
+                    $("#search-results").html(response.message).attr("data-query", response.query);
                 }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.responseText); // выводим ответ сервера
                 console.log('Error: ' + textStatus + ' - ' + errorThrown);
             }
@@ -74,6 +73,35 @@ $(document).ready(function () {
     });
 
     checkForMode(document.getElementById("mode-normal"));
+
+    $(document).on("click", ".pagination a", function (e) {
+        let page = $(this).attr("data-page");
+        let query = $("#search-results").attr("data-query");
+
+        $.ajax({
+            url: 'core/search.php',
+            method: 'GET',
+            dataType: 'json',
+            contentType: false,
+            cache: false,
+            data: {page: page, query: query},
+            success: function (response) {
+                // Выводим результаты запроса
+                if (response.status === false) {
+                    alert(response.message);
+                } else {
+                    console.log(response.query);
+                    $("#search-results").html(response.message).attr("data-query", response.query);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText); // выводим ответ сервера
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
+
+        e.preventDefault();
+    });
 });
 
 // Обработчик смены режима поиска
