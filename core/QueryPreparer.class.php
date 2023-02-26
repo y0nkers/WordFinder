@@ -24,7 +24,7 @@ class QueryPreparer
             $query .= "word LIKE '$mask'";
         } else if ($this->_mode == "extended") {
             $length = $this->_data[0];
-            if ($length < 2 || $length > 32) {
+            if (!empty($length) && ($length < 2 || $length > 32)) {
                 $error = [
                     "status" => false,
                     "message" => "Длина слова должна быть не меньше 2 и не больше 32!"

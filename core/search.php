@@ -13,8 +13,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     } else $query = $_GET["query"];
 
     $page = (isset($_GET["page"]) && $_GET["page"] > 0) ? $_GET["page"] : 1;
-    $limit = (isset($_GET["limit"]) && $_GET["limit"] > 10) ? $_GET["limit"] : 25;
+    $limit = (isset($_GET["limit"]) && ($_GET["limit"] >= 20 && $_GET["limit"] <= 100)) ? $_GET["limit"] : 20;
     $links = (isset($_GET['links'])) ? $_GET['links'] : 4;
+
+    if (isset($_GET["sort_type"]) && isset($_GET["sort_order"])) {
+        if ($_GET["sort_type"] == "sort-word") $query .= " ORDER BY word " ;
+        else if ($_GET["sort_type"] == "sort-length") $query .= " ORDER BY CHAR_LENGTH(word) ";
+        if ($_GET["sort_order"] == "sortASC") $query .= "ASC";
+        else if ($_GET["sort_order"] == "sortDESC") $query .= "DESC";
+    }
 
     // Выполняем запрос и обрабатываем результат
     $paginator = new Paginator($db, $query);
