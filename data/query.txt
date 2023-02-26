@@ -16,3 +16,4 @@ AND word LIKE 'а%%а'
 AND word LIKE '%е%' AND word LIKE '%п%'
 AND word NOT REGEXP '[вк]'
 // быстрее, но запрос длиннее
+

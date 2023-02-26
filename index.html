@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="length">Длина слова:</label>
-                                    <input type="number" class="form-control" id="length" name="length" placeholder="Введите длину слова" min="2" max="32" required>
+                                    <input type="number" class="form-control" id="length" name="length" placeholder="Введите длину слова" min="2" max="32">
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="start">Начало слова:</label>
@@ -59,6 +59,10 @@
                                     <input type="text" class="form-control" id="exclude" name="exclude" placeholder="Введите буквы, которые надо исключить">
                                     <small id="excludeHelp" class="form-text text-muted">Будут выведены только те слова, которые не содержат введённые буквы</small>
                                 </div>
+                                <div class="form-group mb-3">
+                                    <label for="limit">Лимит слов на странице:</label>
+                                    <input type="number" class="form-control" id="limit" name="limit" placeholder="Введите лимит слов (от 20 до 100)" min="20" max="100" value="20" required>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Найти</button>
                             </form>
                         </div>
@@ -67,9 +71,32 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <!-- Контейнер для вывода результатов запроса -->
-            <div id="search-results"></div>
+        <div id="results-container" class="container mt-5 d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="sortSelect" aria-label="Sort select">
+                            <option value="sort-word" selected>алфавиту</option>
+                            <option value="sort-length">длине</option>
+                        </select>
+                        <label for="sortSelect">Сортировать по: </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sortRadio" value ="sortASC" id="sortASC">
+                        <label class="form-check-label" for="sortASC">
+                            Сортировать по возрастанию
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sortRadio" value ="sortDESC" id="sortDESC">
+                        <label class="form-check-label" for="sortDESC">
+                            Сортировать по убыванию
+                        </label>
+                    </div>
+                    <!-- Контейнер для вывода результатов запроса -->
+                    <div id="search-results"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Bootstrap and jQuery scripts -->
