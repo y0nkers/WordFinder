@@ -49,7 +49,7 @@ class QueryPreparer
             $this->validateField("Обязательные буквы", $include, '/^[А-яёЁ]+$/u');
 
             $exclude = $this->_data[5];
-            $this->validateField("Исключённые буквы", $exclude, '/^[А-яёЁ]+$/u');
+            $this->validateField("Исключённые буквы", $exclude, '/^[А-яёЁ-]+$/u');
 
             if (!empty($length)) $query .= "CHAR_LENGTH(word) = $length AND ";
             $query .= "word LIKE '$start%$contains%$end' ";

@@ -25,11 +25,11 @@ class Paginator
 
         $query = $this->_query . " LIMIT " . (($this->_page - 1) * $this->_limit) . ", $this->_limit";
 
-        $rs = $this->_connect->query($query);
+        $query_result = $this->_connect->query($query);
 
-        while ($row = $rs->fetch_assoc()) {
-            $results[] = $row;
-        }
+        $results = [];
+        if ($query_result->num_rows > 0)
+            while ($row = $query_result->fetch_assoc()) $results[] = $row;
 
         $result = new stdClass();
         $result->page = $this->_page;

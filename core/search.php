@@ -31,16 +31,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $html_string .= "<h2>Результаты поиска:</h2>";
     if ($result->total > 0) {
         $html_string .= "<table class='table table-striped'>";
-        $html_string .= "<thead><tr><th>Слово</th></tr></thead>";
+        $html_string .= "<thead><tr><th></th></tr></thead>";
         $html_string .= "<tbody>";
-        for ($i = 0; $i < count($result->data); $i++) $html_string .= "<tr><td>" . $result->data[$i]["word"] . "</td></tr>";
+        for ($i = 0; $i < count($result->data); $i++) $html_string .= "<tr><td>" . (($result->page - 1) * $result->limit + $i + 1) . ". " . $result->data[$i]["word"] . "</td></tr>";
         $html_string .= "</tbody></table></div>";
+        $html_string .= $paginator->createLinks($links);
     } else {
-        $html_string .= "<p>Совпадения не найдены.</p>";
+        $html_string .= "<p>Не найдены подходящие результаты для указанного запроса.</p>";
         $html_string .= "</div>";
     }
-
-    $html_string .= $paginator->createLinks($links);
 
     $response = [
         "status" => true,

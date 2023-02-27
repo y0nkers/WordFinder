@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
     // Обработчик отправки данных формы на сервер
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
@@ -13,13 +16,15 @@ $(document).ready(function () {
         } else if (mode === 'extended') {
             let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
                 contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
+            if ($("#compound-words-checkbox").is(':checked')) exclude += '-';
             data = [length, start, end, contains, include, exclude];
             if (hasDuplicates(include, exclude)) {
                 alert('Буквы в полях "Обязательные буквы" и "Исключённые буквы" должны различаться!');
                 return;
             }
         }
-        let limit = $("#limit").val();
+
+        let limit = $("#limit").find(':selected').val();
 
         // Отправляем AJAX-запрос на сервер
         $.ajax({
@@ -80,7 +85,7 @@ $(document).ready(function () {
     $(document).on("click", ".pagination a", function (e) {
         let page = $(this).attr("data-page");
         let query = $("#search-results").attr("data-query");
-        let limit = $("#limit").val();
+        let limit = $("#limit").find(':selected').val();
 
         $.ajax({
             url: 'core/search.php',
@@ -123,7 +128,7 @@ $(document).ready(function () {
         let sortType = $("#sortSelect").find(":selected").val();
         // Порядок сортировки: по возрастанию или по убыванию
         let sortOrder = $(this).val();
-        let limit = $("#limit").val();
+        let limit = $("#limit").find(':selected').val();
 
         $.ajax({
             url: 'core/search.php',
