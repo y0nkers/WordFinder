@@ -16,7 +16,6 @@ $(document).ready(function () {
         } else if (mode === 'extended') {
             let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
                 contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
-            if ($("#compound-words-checkbox").is(':checked')) exclude += '-';
             data = [length, start, end, contains, include, exclude];
             if (hasDuplicates(include, exclude)) {
                 alert('Буквы в полях "Обязательные буквы" и "Исключённые буквы" должны различаться!');
@@ -25,6 +24,7 @@ $(document).ready(function () {
         }
 
         let limit = $("#limit").find(':selected').val();
+        let compound_words = $("#compound-words-checkbox").is(':checked');
 
         // Отправляем AJAX-запрос на сервер
         $.ajax({
@@ -33,7 +33,7 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: false,
             cache: false,
-            data: {mode: mode, data: JSON.stringify(data), limit: limit},
+            data: {mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
             success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {

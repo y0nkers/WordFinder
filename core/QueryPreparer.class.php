@@ -4,11 +4,13 @@ class QueryPreparer
 {
     private $_mode;
     private $_data;
+    private $_compound_words;
 
-    public function __construct($mode, $data)
+    public function __construct($mode, $data, $compound_words)
     {
         $this->_mode = $mode;
         $this->_data = $data;
+        $this->_compound_words = $compound_words;
     }
 
     // Подготовка строки запроса
@@ -22,6 +24,7 @@ class QueryPreparer
             $mask = str_replace('?', '_', $mask);
             $mask = str_replace('*', '%', $mask);
             $query .= "word LIKE '$mask'";
+            if ($this->_compound_words == "false") $query .= " AND word NOT REGEXP '[-]'";
         } else if ($this->_mode == "extended") {
             $length = $this->_data[0];
             if (!empty($length) && ($length < 2 || $length > 32)) {
@@ -60,6 +63,7 @@ class QueryPreparer
                 }, $include_array);
                 $query .= implode(' ', $include_array);
             }
+            if ($this->_compound_words == "false") $exclude .= '-';
             if (!empty($exclude)) $query .= " AND word NOT REGEXP '[$exclude]'";
         }
         return $query;

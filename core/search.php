@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if (!isset($_GET["query"])) {
         $mode = $_GET["mode"];
         $data = json_decode($_GET['data'], true);
-        $prepaper = new QueryPreparer($mode, $data);
+        $prepaper = new QueryPreparer($mode, $data, $_GET["compound_words"]);
         $query = $prepaper->prepareQuery();
     } else $query = $_GET["query"];
 
