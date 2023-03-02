@@ -2,3 +2,22 @@ ul.pagination a:focus {
     outline: none;
     box-shadow: none;
 }
+
+#loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+/* Затемнение экрана при запросе данных*/
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9998; /* Устанавливаем z-index ниже, чем у загрузочного экрана, но выше, чем у других элементов на странице */
+}

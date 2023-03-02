@@ -2,6 +2,21 @@ $(document).ready(function () {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+    let loading = $("#loading");
+    loading.hide();
+
+    $(document).ajaxSend(function () {
+        loading.show();
+        $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
+        $('<div class="overlay"></div>').appendTo('body'); // Добавляем элемент с классом "overlay" на страницу
+    });
+
+    $(document).ajaxComplete(function () {
+        loading.hide();
+        $('.overlay').remove(); // Удаляем элемент с классом "overlay" со страницы
+        $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
+    });
+
     // Обработчик отправки данных формы на сервер
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
