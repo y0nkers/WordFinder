@@ -1,25 +1,31 @@
 $(document).ready(function () {
+    // bootstrap тултипы (подсказки к полям ввода)
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+    // Элемент "загрузочный экран"
     let loading = $("#loading");
     loading.hide();
 
+    // Добавляем загрузочный экран при отправке запроса
     $(document).ajaxSend(function () {
         loading.show();
         $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
-        $('<div class="overlay"></div>').appendTo('body'); // Добавляем элемент с классом "overlay" на страницу
+        $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
     });
 
+    // Убираем загрузочный экран при завершении запроса
     $(document).ajaxComplete(function () {
         loading.hide();
-        $('.overlay').remove(); // Удаляем элемент с классом "overlay" со страницы
         $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
+        $('.overlay').remove(); // Убираем затемнение
     });
 
     // Обработчик отправки данных формы на сервер
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
+
+        // TODO: VALIDATE ALL DATA
 
         // Получаем введённые данные с полей
         let mode = $("input[name='mode']:checked").val();

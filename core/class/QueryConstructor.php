@@ -1,10 +1,10 @@
 <?php
 
-class QueryPreparer
+class QueryConstructor
 {
-    private $_mode;
+    private string $_mode;
     private $_data;
-    private $_compound_words;
+    private bool $_compound_words;
 
     public function __construct($mode, $data, $compound_words)
     {
@@ -14,7 +14,7 @@ class QueryPreparer
     }
 
     // Подготовка строки запроса
-    public function prepareQuery(): int|string
+    public function constructQuery(): string
     {
         $query = "SELECT * FROM words WHERE ";
 
@@ -24,7 +24,7 @@ class QueryPreparer
             $mask = str_replace('?', '_', $mask);
             $mask = str_replace('*', '%', $mask);
             $query .= "word LIKE '$mask'";
-            if ($this->_compound_words == "false") $query .= " AND word NOT REGEXP '[-]'";
+            if (!$this->_compound_words) $query .= " AND word NOT REGEXP '[-]'";
         } else if ($this->_mode == "extended") {
             $length = $this->_data[0];
             if (!empty($length) && ($length < 2 || $length > 32)) {
