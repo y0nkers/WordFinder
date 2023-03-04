@@ -2,19 +2,21 @@
 
 class Paginator
 {
-    private $_connect;
-    private $_limit;
-    private $_page;
-    private $_query;
-    private $_total;
+    private PDO $_connect; // Подключение к БД
+    private int $_limit; // Лимит слов на странице
+    private int $_page; // Текущая страница
+    private string $_query; // Подготовленная строка запроса
+    private int $_total; // Количество найденных по запросу записей
+    private int $_links; // Количество ссылок в каждую сторону от текущей
 
-    public function __construct($connect, $query)
+    public function __construct($connect, $query, $links)
     {
         $this->_connect = $connect;
         $this->_query = $query;
+        $this->_links = $links;
 
         $result = $this->_connect->query($this->_query);
-        $this->_total = $result->num_rows;
+        $this->_total = $result->rowCount();
     }
 
     // Выполнить запрос к БД и вернуть результат
@@ -28,8 +30,8 @@ class Paginator
         $query_result = $this->_connect->query($query);
 
         $results = [];
-        if ($query_result->num_rows > 0)
-            while ($row = $query_result->fetch_assoc()) $results[] = $row;
+        if ($query_result->rowCount() > 0)
+            while ($row = $query_result->fetch()) $results[] = $row;
 
         $result = new stdClass();
         $result->page = $this->_page;
@@ -41,13 +43,12 @@ class Paginator
     }
 
     // Создание ссылок для перехода между страницами
-    // $links - количество ссылок в каждую сторону от текущей
-    public function createLinks($links): string
+    public function createLinks(): string
     {
         $pages_count = ceil($this->_total / $this->_limit);
 
-        $first_page = (($this->_page - $links) > 0) ? $this->_page - $links : 1;
-        $last_page = (($this->_page + $links) < $pages_count) ? $this->_page + $links : $pages_count;
+        $first_page = (($this->_page - $this->_links) > 0) ? $this->_page - $this->_links : 1;
+        $last_page = (($this->_page + $this->_links) < $pages_count) ? $this->_page + $this->_links : $pages_count;
 
         $html = '<ul class="pagination pagination-sm">';
 

@@ -1,12 +1,18 @@
 <?php
 // Создаем подключение к базе данных
 
-$server = "localhost";
+$host = "localhost";
 $username = "root";
 $password = "";
-$database = "wordfinder";
-$db = new mysqli($server, $username, $password, $database);
-$db->set_charset('utf8');
+$dbname = "wordfinder";
+$charset = "utf8mb4";
 
-// Проверяем соединение с базой данных
-if ($db->connect_error) die("Ошибка подключения: " . $db->connect_error);
+$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+
+try {
+    $db = new PDO($dsn, $username, $password);
+    $db->exec("set names utf8mb4");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $error) {
+    die("Ошибка подключения к базе данных: " . $error->getMessage());
+}
