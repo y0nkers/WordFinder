@@ -25,24 +25,15 @@ $(document).ready(function () {
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
-        // TODO: VALIDATE ALL DATA
-
         // Получаем введённые данные с полей
         let mode = $("input[name='mode']:checked").val();
-        let data = [];
-        data['mode'] = mode;
-        if (mode === 'normal') {
-            let mask = $("#mask").val();
-            data = [mask];
-        } else if (mode === 'extended') {
-            let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
-                contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
-            data = [length, start, end, contains, include, exclude];
-            if (hasDuplicates(include, exclude)) {
-                alert('Буквы в полях "Обязательные буквы" и "Исключённые буквы" должны различаться!');
-                return;
-            }
+        if (!(mode === "normal" || mode === "extended")) {
+            alert("Выберите режим поиска слов!");
+            return;
         }
+
+        let data = validateData(mode);
+        if (data == null) return;
 
         let limit = $("#limit").find(':selected').val();
         let compound_words = $("#compound-words-checkbox").is(':checked');
@@ -208,4 +199,51 @@ function hasDuplicates(str1, str2) {
         }
     }
     return false;
+}
+
+// Валидация всех полей, введённых пользователем
+function validateData(mode) {
+    let data = [];
+    // TODO: get pattern for input value from json/server based on current language
+    if (mode === 'normal') {
+        let mask = $("#mask").val();
+
+        let pattern = /[^а-я?*]/gi;
+        if (!validateField("Маска слова", mask, pattern)) return;
+
+        data = [mask];
+    } else if (mode === 'extended') {
+        let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
+            contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
+
+        if (length < 2 || length > 32) {
+            alert("Длина слова указана неверно!");
+            return;
+        }
+
+        let pattern = /[^а-я?]/gi;
+        if (!validateField("Начало слова", start, pattern)) return;
+        if (!validateField("Конец слова", end, pattern)) return;
+        if (!validateField("Обязательное буквосочетание", contains, pattern)) return;
+
+        pattern = /[^а-я]/gi;
+        if (!validateField("Обязательные буквы", include, pattern)) return;
+        if (!validateField("Исключённые буквы", exclude, pattern)) return;
+
+        if (hasDuplicates(include, exclude)) {
+            alert('Буквы в полях "Обязательные буквы" и "Исключённые буквы" должны различаться!');
+            return;
+        }
+        data = [length, start, end, contains, include, exclude];
+    }
+    return data;
+}
+
+// true - данные поля валидны, иначе false
+function validateField(field, data, pattern) {
+    if (pattern.test(data)) {
+        alert("Проверьте правильность ввода поля: " + field);
+        return false;
+    }
+    return true;
 }

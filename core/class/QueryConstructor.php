@@ -63,7 +63,7 @@ class QueryConstructor
                 }, $include_array);
                 $query .= implode(' ', $include_array);
             }
-            if ($this->_compound_words == "false") $exclude .= '-';
+            if (!$this->_compound_words) $exclude .= '-';
             if (!empty($exclude)) $query .= " AND word NOT REGEXP '[$exclude]'";
         }
         return $query;
