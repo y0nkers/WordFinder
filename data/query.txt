@@ -17,3 +17,19 @@ AND word LIKE '%е%' AND word LIKE '%п%'
 AND word NOT REGEXP '[вк]'
 // быстрее, но запрос длиннее
 
+// SELECT из двух таблиц с одинаковой структурой
+SELECT * FROM `words` WHERE word LIKE 'НЕ%Ь'
+UNION
+SELECT * FROM `words_test` WHERE word LIKE 'НЕ%Ь'
+ORDER BY word ASC
+
+// Создание таблицы-словаря
+CREATE TABLE `wordfinder`.`dictionary_id` ( `word` VARCHAR(32) NOT NULL , UNIQUE (`word`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE `dictionary_id` (
+  `word` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `dictionary_id` ADD UNIQUE KEY `word` (`word`);
+
+// Создание таблицы-списка словарей
+CREATE TABLE `wordfinder`.`dictionaries` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(32) NOT NULL , `language` VARCHAR(32) NOT NULL , `count` INT NULL DEFAULT '0' , PRIMARY KEY (`id`), UNIQUE (`name`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
