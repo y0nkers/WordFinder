@@ -6,9 +6,9 @@ if ($_SESSION['login'] != 'admin' || $_SESSION['password'] != '4bd68659613c4f414
 }
 if (!isset($_SESSION['created'])) {
     $_SESSION['created'] = time();
-} else if (time() - $_SESSION['created'] > 5) {
+} else if (time() - $_SESSION['created'] > 1800) {
     // session started more than 30 minutes ago
-    session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
+    session_regenerate_id(true); // change session ID for the current session and invalidate old session ID
     unset($_SESSION['created']);
     unset($_SESSION['login']);
     unset($_SESSION['password']);
