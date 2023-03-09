@@ -1,4 +1,3 @@
-LOAD DATA INFILE 'words.txt' IGNORE INTO TABLE words (word)
 SELECT * FROM `words` WHERE CHAR_LENGTH(word) = 5 AND word LIKE 'г%мм%а' AND word NOT LIKE '%е%' AND word NOT LIKE '%у%' // Много операторов not like
 SELECT * FROM `words` WHERE CHAR_LENGTH(word) = 5 AND word REGEXP '^г.{2}мм.{1}а$' AND word NOT LIKE '%е%' AND word NOT LIKE '%у%' //regexp медленно
 SELECT * FROM `words` WHERE CHAR_LENGTH(word) = 5 AND word LIKE 'г%мм%а' AND word NOT REGEXP '[еу]' // Оптимальный вариант: LIKE для start&contains&end, REGEXP для exclude
@@ -33,3 +32,6 @@ ALTER TABLE `dictionary_id` ADD UNIQUE KEY `word` (`word`);
 
 // Создание таблицы-списка словарей
 CREATE TABLE `wordfinder`.`dictionaries` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(32) NOT NULL , `language` VARCHAR(32) NOT NULL , `count` INT NULL DEFAULT '0' , PRIMARY KEY (`id`), UNIQUE (`name`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+// Загрузка слов из файла в таблицу
+LOAD DATA INFILE 'words.txt'IGNORE INTO TABLE dictionary_id FIELDS TERMINATED BY ' ';

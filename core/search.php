@@ -1,9 +1,9 @@
 <?php
-require_once "db_connect.php";
+require_once "connect.php";
 require_once "class/QueryConstructor.php";
 require_once "class/Paginator.class.php";
 
-/** @var PDO $db */
+/** @var PDO $connect */
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $query = "";
     if (!isset($_GET["query"])) {
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     }
 
     // Выполняем запрос и обрабатываем результат
-    $paginator = new Paginator($db, $query, $links);
+    $paginator = new Paginator($connect, $query, $links);
     $result = $paginator->getData($limit, $page);
 
     $html_string = constructHTML($result, $paginator);
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     echo json_encode($response);
 
     // Закрываем соединение с базой данных
-    $db = null;
+    $connect = null;
 }
 
 // Создать html строку на основе результатов запроса
