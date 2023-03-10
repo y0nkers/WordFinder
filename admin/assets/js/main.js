@@ -34,6 +34,7 @@ $(document).ready(function () {
                     alert(response.message);
                 } else {
                     alert("Словарь добавлен");
+                    window.location.reload();
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -66,6 +67,7 @@ $(document).ready(function () {
                     alert(response.message);
                 } else {
                     alert("Словарь удалён");
+                    window.location.reload();
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
