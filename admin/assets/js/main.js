@@ -76,6 +76,53 @@ $(document).ready(function () {
             }
         });
     })
+
+    $("input[type=radio][name=addWordsType]").change(function () {
+        let type = $(this).val();
+        let textarea = $("#addWordsTextarea"),
+            fileInput = $("#addWordsFile"),
+            label = $("label[for='addWordsFile']"),
+            tooltipInput = $("#addWordsInputTooltip"),
+            tooltipTextarea = $("#addWordsTextareaTooltip");
+        switch (type) {
+            case "addFromFile":
+                label.text("Загрузите файл со словами");
+                fileInput.removeClass("d-none");
+                fileInput.prop('disabled', false);
+                tooltipInput.removeClass("d-none");
+
+                textarea.addClass("d-none");
+                textarea.prop('disabled', true);
+                tooltipTextarea.addClass("d-none");
+                break;
+            case "addFromText":
+                label.text("Введите слова для добавления");
+                textarea.removeClass("d-none");
+                textarea.prop('disabled', false);
+                tooltipTextarea.removeClass("d-none");
+
+                fileInput.addClass("d-none");
+                fileInput.prop('disabled', true);
+                tooltipInput.addClass("d-none");
+                break;
+            default:
+                break;
+        }
+    });
+
+    $("#addWordsForm").submit(function (event) {
+        event.preventDefault();
+        // TODO
+        console.log("halo");
+    })
+
+    $("#deleteWordsForm").submit(function (event) {
+        event.preventDefault();
+        // TODO
+        let words = $("#deleteWordsInput").val().trim();
+        let lines = words.split('\n');
+        console.log(lines);
+    })
 });
 
 function validateFileType(input) {
