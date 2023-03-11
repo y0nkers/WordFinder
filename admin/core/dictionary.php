@@ -4,6 +4,7 @@ require_once "connect.php";
 /** @var PDO $connect */
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = $_POST['type'];
+    $count = 0;
 
     if ($type == 'add') {
         $words = $_FILES['words'];
@@ -30,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Загружаем слова в созданную таблицу
         try {
-            $stmt = $connect->prepare("LOAD DATA INFILE :words IGNORE INTO TABLE $dictionary FIELDS TERMINATED BY ' ';");
+            $stmt = $connect->prepare("LOAD DATA INFILE :words IGNORE INTO TABLE $dictionary FIELDS TERMINATED BY '\r';");
             $stmt->bindParam(':words', $words['name']);
             $stmt->execute();
         } catch (PDOException $e) {
@@ -43,8 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $count = $connect->query($query)->fetchColumn();
 
             $stmt = $connect->prepare("UPDATE `dictionaries` SET `count` = :count WHERE id = :id;");
-            $stmt->bindParam(':count', $count);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
         } catch (PDOException $e) {
             errorHandler("Ошибка при обновлении счётчика слов в словаре.");
@@ -66,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Удаление записи о словаре
         try {
             $stmt = $connect->prepare("DELETE FROM `dictionaries` WHERE id = :id");
-            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
         } catch (PDOException $e) {
             errorHandler("Ошибка при удалении записи о словаре.");
@@ -82,7 +83,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $response = [
-        "status" => true
+        "status" => true,
+        "count" => $count
     ];
     echo json_encode($response);
 }

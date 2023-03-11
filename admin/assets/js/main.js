@@ -3,16 +3,12 @@ $(document).ready(function () {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-    let file = false;
-    $('input[name="words"]').change(function (e) {
-        file = e.target.files[0];
-    });
-
     $("#addDictionaryForm").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
-        let name = $("#name").val();
-        let language = $("#language").val();
+        let name = $("#addDictionaryName").val();
+        let language = $("#addDictionaryLanguage").val();
+        let file = document.getElementById('addDictionaryWords').files[0];
 
         let data = new FormData();
         data.append('type', "add");
@@ -33,7 +29,7 @@ $(document).ready(function () {
                 if (response.status === false) {
                     alert(response.message);
                 } else {
-                    alert("Словарь добавлен");
+                    alert("Словарь добавлен. Количество слов: " + response.count);
                     window.location.reload();
                 }
             },
@@ -112,16 +108,76 @@ $(document).ready(function () {
 
     $("#addWordsForm").submit(function (event) {
         event.preventDefault();
-        // TODO
-        console.log("halo");
+
+        let dictionary_id = $("select[name='select-add'] option:selected").val();
+        let mode = $("input[type=radio][name=addWordsType]:checked").val();
+        let words;
+        if (mode === "addFromFile") words = document.getElementById('addWordsFile').files[0];
+        else if (mode === "addFromText") words = $("#addWordsTextarea").val().trim().split('\n');
+
+        let data = new FormData();
+        data.append('type', "add");
+        data.append('id', dictionary_id);
+        data.append('mode', mode);
+        data.append('words', words);
+
+        $.ajax({
+            url: 'core/words.php',
+            type: 'POST',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: data,
+            success: function (response) {
+                // Выводим результаты запроса
+                if (response.status === false) {
+                    alert(response.message);
+                } else {
+                    alert("Добавлено новых слов: " + response.count);
+                    window.location.reload();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText); // выводим ответ сервера
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
     })
 
     $("#deleteWordsForm").submit(function (event) {
         event.preventDefault();
-        // TODO
-        let words = $("#deleteWordsInput").val().trim();
-        let lines = words.split('\n');
-        console.log(lines);
+
+        let dictionary_id = $("select[name='select-delete'] option:selected").val();
+        let words = $("#deleteWordsInput").val().trim().split('\n');
+
+        let data = new FormData();
+        data.append('type', "delete");
+        data.append('id', dictionary_id);
+        data.append('words', words);
+
+        $.ajax({
+            url: 'core/words.php',
+            type: 'POST',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: data,
+            success: function (response) {
+                // Выводим результаты запроса
+                if (response.status === false) {
+                    alert(response.message);
+                } else {
+                    alert("Удалено слов: " + response.count);
+                    window.location.reload();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText); // выводим ответ сервера
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
     })
 });
 

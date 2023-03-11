@@ -119,17 +119,17 @@ function print_select(array $data, string $name): void
                     <div class="modal-body">
                         <form id="addDictionaryForm">
                             <div class="form-group mb-3">
-                                <label for="name">Название словаря:</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Будет отображаться у пользователя при выборе" maxlength="32" required>
+                                <label for="addDictionaryName">Название словаря:</label>
+                                <input type="text" class="form-control" id="addDictionaryName" name="addDictionaryName" placeholder="Будет отображаться у пользователя при выборе" maxlength="32" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="language">Язык словаря:</label>
-                                <input type="text" class="form-control" id="language" name="language" placeholder="Позволяет использовать несколько словарей одного языка" maxlength="32" required>
+                                <label for="addDictionaryLanguage">Язык словаря:</label>
+                                <input type="text" class="form-control" id="addDictionaryLanguage" name="addDictionaryLanguage" placeholder="Позволяет использовать несколько словарей одного языка" maxlength="32" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="words">Загрузите файл со словами</label>
+                                <label for="addDictionaryWords">Загрузите файл со словами</label>
                                 <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Текстовый файл должен содержать на каждой строке только одно слово длиной не более 32 букв (остальные буквы будут обрезаны)."><i class="fas fa-question-circle"></i></span>
-                                <input type="file" name="words" id="words" accept="text/plain" onchange="validateFileType(this)" required>
+                                <input type="file" id="addDictionaryWords" name="addDictionaryWords" accept="text/plain" onchange="validateFileType(this)" required>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
@@ -175,7 +175,7 @@ function print_select(array $data, string $name): void
                             <div class="form-group mb-3">
                                 <label class="form-check-label">Режим добавления</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="addWordsType" id="addFromFileRadio" value="addFromFile" checked>
+                                    <input class="form-check-input" type="radio" name="addWordsType" id="addFromFileRadio" value="addFromFile" checked required>
                                     <label class="form-check-label" for="addFromFileRadio">
                                         Загрузка из файла
                                     </label>
@@ -191,7 +191,7 @@ function print_select(array $data, string $name): void
                                 <label for="addWordsFile">Загрузите файл со словами</label>
                                 <span id="addWordsInputTooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Текстовый файл должен содержать на каждой строке только одно слово длиной не более 32 букв (остальные буквы будут обрезаны)."><i class="fas fa-question-circle"></i></span>
                                 <span id="addWordsTextareaTooltip" class="d-none" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Каждое слово должно быть на отдельной строке. Слова длиной более 32 букв будут обрезаны."><i class="fas fa-question-circle"></i></span>
-                                <input id="addWordsFile" type="file" name="words" accept="text/plain" onchange="validateFileType(this)" required>
+                                <input id="addWordsFile" type="file" name="addWordsFile" accept="text/plain" onchange="validateFileType(this)" required>
                                 <textarea class="form-control d-none" id="addWordsTextarea" rows="3" disabled required></textarea>
                             </div>
                             <div class="modal-footer">
@@ -216,7 +216,7 @@ function print_select(array $data, string $name): void
                             <div class="form-group mb-3">
                                 <label for="deleteWordsInput" class="form-label">Введите слова для удаления</label>
                                 <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Каждое слово должно быть на отдельной строке. Слова длиной более 32 букв будут обрезаны."><i class="fas fa-question-circle"></i></span>
-                                <textarea class="form-control" id="deleteWordsInput" rows="3"></textarea>
+                                <textarea class="form-control" id="deleteWordsInput" rows="3" required></textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
