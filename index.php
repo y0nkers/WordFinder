@@ -1,3 +1,29 @@
+<?php
+require_once "core/connect.php";
+/** @var PDO $connect */
+
+$dictionaries = [];
+$stmt = $connect->query("SELECT * FROM `dictionaries`");
+while ($row = $stmt->fetch()) $dictionaries[] = $row;
+
+/**
+ * Создание списка всех доступных словарей
+ * @param array $data массив с результатами запроса
+ * @param string $name название списка
+ * @return void
+ */
+function print_select(array $data, string $name): void
+{
+    $select_html = '<div class="form-group mb-3"><label for="' . $name . "[]" . '">Выберите словари для поиска: </label><select class="form-select" multiple name="' . $name . "[]" . '" aria-label="Select dictionary" required>';
+    foreach ($data as $item) {
+        $select_html .= '<option value="' . $item["id"] . '" data-language="'. $item["language"] . '">' . $item["name"] . ' [' . $item["language"] . ', слов: ' . $item["count"] . ']' . '</option>';
+    }
+    $select_html .= '</select></div>';
+    echo $select_html;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -28,6 +54,7 @@
                         <div class="card-header">Поиск слов</div>
                         <div class="card-body">
                             <form id="search-form">
+                                <?php print_select($dictionaries, "dictionaries"); ?>
                                 <div class="form-group mb-3">
                                     <label>Режим поиска:</label><br>
                                     <div class="form-check form-check-inline">

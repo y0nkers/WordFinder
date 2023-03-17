@@ -2,12 +2,18 @@
 
 class QueryConstructor
 {
+    // Массив id таблиц, в которых нужно производить поиск
+    private array $_dictionaries;
+    // Режим поиска (normal/extended)
     private string $_mode;
-    private $_data;
+    // Массив с параметрами поиска
+    private array $_data;
+    // Искать ли составные слова
     private bool $_compound_words;
 
-    public function __construct($mode, $data, $compound_words)
+    public function __construct($dictionaries, string $mode, $data, bool $compound_words)
     {
+        $this->_dictionaries = $dictionaries;
         $this->_mode = $mode;
         $this->_data = $data;
         $this->_compound_words = $compound_words;
@@ -16,7 +22,20 @@ class QueryConstructor
     // Подготовка строки запроса
     public function constructQuery(): string
     {
-        $query = "SELECT * FROM words WHERE ";
+        $condition = $this->constructConditionPart();
+        $query = "";
+        $count = count($this->_dictionaries);
+        foreach ($this->_dictionaries as $index => $dictionary) {
+            $query .= "SELECT * FROM " . "dictionary_" . $dictionary . $condition;
+            if ($index != $count - 1) $query .= " UNION ";
+        }
+
+        return $query;
+    }
+
+    // Подготовка condition части запроса (WHERE ... )
+    private function constructConditionPart(): string {
+        $query = " WHERE ";
 
         if ($this->_mode == "normal") {
             $mask = $this->_data[0];
@@ -70,7 +89,7 @@ class QueryConstructor
     }
 
     // Проверка поля на корректность введённых данных
-    private function validateField($field, $data, $pattern): void
+    private function validateField(string $field, string $data, string $pattern): void
     {
         if (!empty($data) && !preg_match($pattern, $data)) {
             $error = [

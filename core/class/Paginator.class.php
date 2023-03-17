@@ -9,7 +9,7 @@ class Paginator
     private int $_total; // Количество найденных по запросу записей
     private int $_links; // Количество ссылок в каждую сторону от текущей
 
-    public function __construct($connect, $query, $links)
+    public function __construct(PDO $connect, string $query, int $links)
     {
         $this->_connect = $connect;
         $this->_query = $query;
@@ -20,7 +20,7 @@ class Paginator
     }
 
     // Выполнить запрос к БД и вернуть результат
-    public function getData($limit = 10, $page = 1): stdClass
+    public function getData(int $limit = 10, int $page = 1): stdClass
     {
         $this->_limit = $limit;
         $this->_page = $page;

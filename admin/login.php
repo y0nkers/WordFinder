@@ -1,4 +1,6 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] != "GET") die();
+
 session_start();
 
 if (isset($_SESSION['error'])) {
@@ -6,15 +8,13 @@ if (isset($_SESSION['error'])) {
     unset($_SESSION['error']);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    if (isset($_GET['login']) && isset($_GET['password'])) {
-        $login = $_GET['login'];
-        $password = md5($_GET['password']);
+if (isset($_GET['login']) && isset($_GET['password'])) {
+    $login = $_GET['login'];
+    $password = md5($_GET['password']);
 
-        $_SESSION['login'] = $login;
-        $_SESSION['password'] = $password;
-        header('Location: panel.php');
-    }
+    $_SESSION['login'] = $login;
+    $_SESSION['password'] = $password;
+    header('Location: panel.php');
 }
 ?>
 

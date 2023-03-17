@@ -25,6 +25,12 @@ $(document).ready(function () {
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
+        let dictionaries = $("select[name='dictionaries[]']").val();
+        if (!(Array.isArray(dictionaries) && dictionaries.length)) {
+            alert("Для поиска необходимо выбрать хотя бы один словарь!");
+            return;
+        }
+
         // Получаем введённые данные с полей
         let mode = $("input[name='mode']:checked").val();
         if (!(mode === "normal" || mode === "extended")) {
@@ -45,7 +51,7 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: false,
             cache: false,
-            data: {mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
+            data: {dictionaries: dictionaries, mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
             success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {

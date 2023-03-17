@@ -95,7 +95,7 @@ function print_select(array $data, string $name): void
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="../index.html">Обратно на сайт</a>
+                            <a class="nav-link" href="../index.php">Обратно на сайт</a>
                         </li>
                     </ul>
                 </div>

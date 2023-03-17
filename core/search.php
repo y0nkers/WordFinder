@@ -1,44 +1,46 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] != "GET") die();
+
 require_once "connect.php";
+/** @var PDO $connect */
 require_once "class/QueryConstructor.php";
 require_once "class/Paginator.class.php";
 
-/** @var PDO $connect */
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    $query = "";
-    if (!isset($_GET["query"])) {
-        $mode = $_GET["mode"];
-        $data = json_decode($_GET['data'], true);
-        $constructor = new QueryConstructor($mode, $data, json_decode($_GET["compound_words"]));
-        $query = $constructor->constructQuery();
-    } else $query = $_GET["query"];
+$query = "";
+if (!isset($_GET["query"])) {
+    $dictionaries = $_GET["dictionaries"];
+    $mode = $_GET["mode"];
+    $data = json_decode($_GET['data'], true);
+    $compound_words = json_decode($_GET["compound_words"]);
+    $constructor = new QueryConstructor($dictionaries, $mode, $data, json_decode($_GET["compound_words"]));
+    $query = $constructor->constructQuery();
+} else $query = $_GET["query"];
 
-    $page = (isset($_GET["page"]) && $_GET["page"] > 0) ? $_GET["page"] : 1;
-    $limit = (isset($_GET["limit"]) && ($_GET["limit"] >= 20 && $_GET["limit"] <= 100)) ? $_GET["limit"] : 20;
-    $links = (isset($_GET['links'])) ? $_GET['links'] : 4;
+$page = (isset($_GET["page"]) && $_GET["page"] > 0) ? $_GET["page"] : 1;
+$limit = (isset($_GET["limit"]) && ($_GET["limit"] >= 20 && $_GET["limit"] <= 100)) ? $_GET["limit"] : 20;
+$links = (isset($_GET['links'])) ? $_GET['links'] : 4;
 
-    if (isset($_GET["sort_type"]) && isset($_GET["sort_order"])) {
-        if ($_GET["sort_type"] == "sort-word") $query .= " ORDER BY word ";
-        else if ($_GET["sort_type"] == "sort-length") $query .= " ORDER BY CHAR_LENGTH(word) ";
-        if ($_GET["sort_order"] == "sortASC") $query .= "ASC";
-        else if ($_GET["sort_order"] == "sortDESC") $query .= "DESC";
-    }
-
-    // Выполняем запрос и обрабатываем результат
-    $paginator = new Paginator($connect, $query, $links);
-    $result = $paginator->getData($limit, $page);
-
-    $html_string = constructHTML($result, $paginator);
-    $response = [
-        "status" => true,
-        "message" => $html_string,
-        "query" => $query
-    ];
-    echo json_encode($response);
-
-    // Закрываем соединение с базой данных
-    $connect = null;
+if (isset($_GET["sort_type"]) && isset($_GET["sort_order"])) {
+    if ($_GET["sort_type"] == "sort-word") $query .= " ORDER BY word ";
+    else if ($_GET["sort_type"] == "sort-length") $query .= " ORDER BY CHAR_LENGTH(word) ";
+    if ($_GET["sort_order"] == "sortASC") $query .= "ASC";
+    else if ($_GET["sort_order"] == "sortDESC") $query .= "DESC";
 }
+
+// Выполняем запрос и обрабатываем результат
+$paginator = new Paginator($connect, $query, $links);
+$result = $paginator->getData($limit, $page);
+
+$html_string = constructHTML($result, $paginator);
+$response = [
+    "status" => true,
+    "message" => $html_string,
+    "query" => $query
+];
+echo json_encode($response);
+
+// Закрываем соединение с базой данных
+$connect = null;
 
 // Создать html строку на основе результатов запроса
 function constructHTML($result, Paginator $paginator): string
