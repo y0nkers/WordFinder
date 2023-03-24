@@ -1,3 +1,11 @@
+let languages = null;
+let allowedChars = null;
+
+async function loadLanguages() {
+    const response = await fetch('assets/js/languages.json');
+    languages = await response.json();
+}
+
 $(document).ready(function () {
     // bootstrap тултипы (подсказки к полям ввода)
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -6,6 +14,14 @@ $(document).ready(function () {
     // Элемент "загрузочный экран"
     let loading = $("#loading");
     loading.hide();
+
+    let language = "russian";
+    loadLanguages().then(_ => {
+        console.log("Languages loaded!");
+        console.log(languages);
+        allowedChars = languages[language].allowedChars;
+        console.log(allowedChars);
+    });
 
     // Добавляем загрузочный экран при отправке запроса
     $(document).ajaxSend(function () {
@@ -25,9 +41,21 @@ $(document).ready(function () {
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
-        let dictionaries = $("select[name='dictionaries[]']").val();
+        let dictionaries = $("#select-dictionaries").val();
         if (!(Array.isArray(dictionaries) && dictionaries.length)) {
             alert("Для поиска необходимо выбрать хотя бы один словарь!");
+            return;
+        }
+
+        // Массив со языками всех выбранных словарей
+        const languages = $('#select-dictionaries option:selected').map(function () {
+            return $(this).data('language');
+        }).get();
+
+        // Проверяем чтобы у всех выбранных словарей был один и тот же язык
+        const allLanguagesEqual = languages.every(language => language === languages[0]);
+        if (!allLanguagesEqual) {
+            alert("Язык выбранных словарей не должен различаться!");
             return;
         }
 

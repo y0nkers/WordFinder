@@ -4,7 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") die();
 require_once "connect.php";
 /** @var PDO $connect */
 require_once "class/QueryConstructor.php";
-require_once "class/Paginator.class.php";
+require_once "class/Paginator.php";
 
 $query = "";
 if (!isset($_GET["query"])) {
@@ -12,10 +12,11 @@ if (!isset($_GET["query"])) {
     $mode = $_GET["mode"];
     $data = json_decode($_GET['data'], true);
     $compound_words = json_decode($_GET["compound_words"]);
-    $constructor = new QueryConstructor($dictionaries, $mode, $data, json_decode($_GET["compound_words"]));
+    $constructor = new QueryConstructor($dictionaries, $mode, $data, $compound_words);
     $query = $constructor->constructQuery();
 } else $query = $_GET["query"];
 
+// Дополнительные настройки: страница поиска, лимит слов на странице, количество ссылок
 $page = (isset($_GET["page"]) && $_GET["page"] > 0) ? $_GET["page"] : 1;
 $limit = (isset($_GET["limit"]) && ($_GET["limit"] >= 20 && $_GET["limit"] <= 100)) ? $_GET["limit"] : 20;
 $links = (isset($_GET['links'])) ? $_GET['links'] : 4;

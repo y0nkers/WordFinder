@@ -12,13 +12,13 @@ while ($row = $stmt->fetch()) $dictionaries[] = $row;
  * @param string $name название списка
  * @return void
  */
-function print_select(array $data, string $name): void
+
+function print_select_options(array $data): void
 {
-    $select_html = '<div class="form-group mb-3"><label for="' . $name . "[]" . '">Выберите словари для поиска: </label><select class="form-select" multiple name="' . $name . "[]" . '" aria-label="Select dictionary" required>';
+    $select_html = "";
     foreach ($data as $item) {
-        $select_html .= '<option value="' . $item["id"] . '" data-language="'. $item["language"] . '">' . $item["name"] . ' [' . $item["language"] . ', слов: ' . $item["count"] . ']' . '</option>';
+        $select_html .= '<option value="' . $item["id"] . '" data-language="' . $item["language"] . '">' . $item["name"] . ' [' . $item["language"] . ', слов: ' . $item["count"] . ']' . '</option>';
     }
-    $select_html .= '</select></div>';
     echo $select_html;
 }
 
@@ -54,7 +54,12 @@ function print_select(array $data, string $name): void
                         <div class="card-header">Поиск слов</div>
                         <div class="card-body">
                             <form id="search-form">
-                                <?php print_select($dictionaries, "dictionaries"); ?>
+                                <div class="form-group mb-3">
+                                    <label for="dictionaries[]">Выберите словари для поиска:</label>
+                                    <select id="select-dictionaries" class="form-select" multiple name="dictionaries[]" aria-label="Select dictionary" required>
+                                        <?php print_select_options($dictionaries); ?>
+                                    </select>
+                                </div>
                                 <div class="form-group mb-3">
                                     <label>Режим поиска:</label><br>
                                     <div class="form-check form-check-inline">
@@ -149,7 +154,7 @@ function print_select(array $data, string $name): void
         <!-- Bootstrap and jQuery scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="assets/js/main.js"></script>
+        <script type="module" src="assets/js/main.js"></script>
 
     </body>
 </html>

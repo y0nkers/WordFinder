@@ -1,0 +1,8 @@
+{
+  "russian": {
+    "allowedChars": "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+  },
+  "english": {
+    "allowedChars": "abcdefghijklmnopqrstuvwxyz"
+  }
+}

@@ -25,6 +25,7 @@ class QueryConstructor
         $condition = $this->constructConditionPart();
         $query = "";
         $count = count($this->_dictionaries);
+        // Выполняем SELECT запрос для каждого указанного словаря
         foreach ($this->_dictionaries as $index => $dictionary) {
             $query .= "SELECT * FROM " . "dictionary_" . $dictionary . $condition;
             if ($index != $count - 1) $query .= " UNION ";
