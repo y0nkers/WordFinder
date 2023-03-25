@@ -1,10 +1,6 @@
 <?php
-// Создаем подключение к базе данных
-
-// TODO: сделать отдельную запись для пользователя на readonly
-
 $host = "localhost";
-$username = "root";
+$username = "user";
 $password = "";
 $dbname = "wordfinder";
 $charset = "utf8mb4";

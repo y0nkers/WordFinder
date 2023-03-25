@@ -40,3 +40,8 @@ LOAD DATA INFILE 'words.txt'IGNORE INTO TABLE dictionary_id FIELDS TERMINATED BY
 SELECT word FROM words WHERE word LIKE "%нефт%"
 UNION
 SELECT word FROM test WHERE word LIKE "%нефт%"
+
+CREATE USER 'user'@'localhost' IDENTIFIED BY '';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'wordfinder';
+GRANT SELECT ON wordfinder.* TO 'user'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON wordfinder.* TO 'admin'@'localhost';

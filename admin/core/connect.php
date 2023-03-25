@@ -1,9 +1,7 @@
 <?php
-// Создаем подключение к базе данных
-
 $host = "localhost";
-$username = "root";
-$password = "";
+$username = "admin";
+$password = "wordfinder";
 $dbname = "wordfinder";
 $charset = "utf8mb4";
 
