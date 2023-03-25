@@ -3,6 +3,9 @@ $(document).ready(function () {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+    $("#addDictionaryWords").change(validateFileType);
+    $("#addWordsFile").change(validateFileType);
+
     $("#addDictionaryForm").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
@@ -43,11 +46,11 @@ $(document).ready(function () {
     $("#deleteDictionaryForm").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
-        let id = $("#id").val();
+        let name = $("#deleteDictionaryName").val();
 
         let data = new FormData();
         data.append('type', "delete");
-        data.append('id', id);
+        data.append('name', name);
 
         $.ajax({
             url: 'core/dictionary.php',
@@ -181,13 +184,13 @@ $(document).ready(function () {
     })
 });
 
-function validateFileType(input) {
-    let fileName = input.value;
+function validateFileType() {
+    let fileName = this.value;
     let dotIndex = fileName.lastIndexOf(".") + 1;
     let fileExtension = fileName.substr(dotIndex).toLowerCase();
 
     if (!(fileExtension === "txt" || fileExtension === "text")) {
         alert("Расширение файла должно быть .txt!");
-        input.value = "";
+        this.value = "";
     }
 }

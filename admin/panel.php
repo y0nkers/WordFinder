@@ -88,7 +88,7 @@ require '../header.php';
                             <div class="form-group mb-3">
                                 <label for="addDictionaryWords">Загрузите файл со словами</label>
                                 <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Текстовый файл должен содержать на каждой строке только одно слово длиной не более 32 букв (остальные буквы будут обрезаны)."><i class="fas fa-question-circle"></i></span>
-                                <input type="file" id="addDictionaryWords" name="addDictionaryWords" accept="text/plain" onchange="validateFileType(this)" required>
+                                <input type="file" id="addDictionaryWords" name="addDictionaryWords" accept="text/plain" required>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
@@ -110,8 +110,8 @@ require '../header.php';
                     <div class="modal-body">
                         <form id="deleteDictionaryForm">
                             <div class="form-group mb-3">
-                                <label for="id">ID словаря:</label>
-                                <input type="number" class="form-control" id="id" name="id" placeholder="Введите ID словаря для удаления" required>
+                                <label for="deleteDictionaryName">Название словаря:</label>
+                                <input type="text" class="form-control" id="deleteDictionaryName" name="deleteDictionaryName" placeholder="Введите название словаря для удаления" required>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -157,7 +157,7 @@ require '../header.php';
                                 <label for="addWordsFile">Загрузите файл со словами</label>
                                 <span id="addWordsInputTooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Текстовый файл должен содержать на каждой строке только одно слово длиной не более 32 букв (остальные буквы будут обрезаны)."><i class="fas fa-question-circle"></i></span>
                                 <span id="addWordsTextareaTooltip" class="d-none" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Каждое слово должно быть на отдельной строке. Слова длиной более 32 букв будут обрезаны."><i class="fas fa-question-circle"></i></span>
-                                <input id="addWordsFile" type="file" name="addWordsFile" accept="text/plain" onchange="validateFileType(this)" required>
+                                <input id="addWordsFile" type="file" name="addWordsFile" accept="text/plain" required>
                                 <textarea class="form-control d-none" id="addWordsTextarea" rows="3" disabled required></textarea>
                             </div>
                             <div class="modal-footer">

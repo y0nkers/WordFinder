@@ -52,15 +52,17 @@ if ($type == 'add') {
         errorHandler("Ошибка при обновлении счётчика слов в словаре.");
     }
 } else if ($type == 'delete') {
-    $id = $_POST['id'];
+    $name = $_POST['name'];
 
     // Поиск записи о словаре с введённым id
     try {
-        $stmt = $connect->prepare("SELECT id FROM `dictionaries` WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt = $connect->prepare("SELECT id FROM `dictionaries` WHERE name = :name");
+        $stmt->bindParam(':name', $name);
         $stmt->execute();
 
-        if ($stmt->rowCount() == 0) errorHandler("Словарь с указанным id не найден!");
+        if ($stmt->rowCount() == 0) errorHandler("Словарь с указанным названием не найден!");
+        $row = $stmt->fetch();
+        $id = $row['id'];
     } catch (PDOException $e) {
         errorHandler("Ошибка при поиске словаря.");
     }
