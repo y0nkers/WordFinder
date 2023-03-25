@@ -29,86 +29,45 @@ while ($row = $stmt->fetch()) $dictionaries[] = $row;
  */
 function print_dictionaries(array $data): void
 {
-    $table_html = <<<TABLE
-    <div class="container mt-5"> 
-    <div class="row justify-content-center">
-    <div class="col-md-6">
-    <table class="table table-striped">
-    <thead>
-    <tr>
-    <th>ID словаря</th>
-    <th>Название</th>
-    <th>Язык</th>
-    <th>Количество слов</th>
-    </tr>
-    </thead>
-    TABLE;
-
+    $table_data = "";
     for ($i = 0; $i < count($data); $i++) {
-        $table_html .= "<tr>";
-        $table_html .= "<td>" . $data[$i]["id"] . "</td>";
-        $table_html .= "<td>" . $data[$i]["name"] . "</td>";
-        $table_html .= "<td>" . $data[$i]["language"] . "</td>";
-        $table_html .= "<td>" . $data[$i]["count"] . "</td>";
-        $table_html .= "</tr>";
+        $table_data .= "<tr>";
+        $table_data .= "<td>" . $data[$i]["id"] . "</td>";
+        $table_data .= "<td>" . $data[$i]["name"] . "</td>";
+        $table_data .= "<td>" . $data[$i]["language"] . "</td>";
+        $table_data .= "<td>" . $data[$i]["count"] . "</td>";
+        $table_data .= "</tr>";
     }
-
-    $table_html .= "</table></div></div></div>";
-    echo $table_html;
+    echo $table_data;
 }
 
 /**
  * Создание списка всех доступных словарей
  * @param array $data массив с результатами запроса
- * @param string $name название списка
  * @return void
  */
-function print_select(array $data, string $name): void
+function print_select_options(array $data): void
 {
-    $select_html = '<div class="form-group mb-3"><label for="' . $name . '">Выберите словарь: </label><select class="form-select" name="' . $name. '" aria-label="Select dictionary" required>';
+    $select_html = "";
     foreach ($data as $item) {
         $select_html .= '<option value="' . $item["id"] . '">' . $item["name"] . ' [' . $item["language"] . ']' . '</option>';
     }
-    $select_html .= '</select></div>';
     echo $select_html;
 }
 
+$title = "Word Finder - Админ-панель";
+require '../header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <title>Админ панель</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="/assets/img/favicon.ico">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">Админ-панель</span>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="../index.php">Обратно на сайт</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
+<main class="container-fluid container-xl pt-5">
+    <div class="pt-5 pb-3">
         <!-- Кнопки вызова диалоговых окон -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteDictionaryModal">Удалить словарь</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWordsModal">Добавить слова</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteWordsModal">Удалить слова</button>
 
-        <!-- Диалоговые окна -->
+        <!-- Добавить словарь -->
         <div class="modal fade" id="addDictionaryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addDictionaryModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -140,6 +99,7 @@ function print_select(array $data, string $name): void
                 </div>
             </div>
         </div>
+        <!-- Удалить словарь -->
         <div class="modal fade" id="deleteDictionaryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteDictionaryModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -162,6 +122,7 @@ function print_select(array $data, string $name): void
                 </div>
             </div>
         </div>
+        <!-- Добавить слова -->
         <div class="modal fade" id="addWordsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addWordsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -171,7 +132,12 @@ function print_select(array $data, string $name): void
                     </div>
                     <div class="modal-body">
                         <form id="addWordsForm">
-                            <?php print_select($dictionaries, "select-add"); ?>
+                            <div class="form-group mb-3">
+                                <label for="select-add">Выберите словарь:</label>
+                                <select id="select-add" class="form-select" multiple name="select-add" aria-label="Select dictionary" required>
+                                    <?php print_select_options($dictionaries); ?>
+                                </select>
+                            </div>
                             <div class="form-group mb-3">
                                 <label class="form-check-label">Режим добавления</label>
                                 <div class="form-check">
@@ -203,6 +169,7 @@ function print_select(array $data, string $name): void
                 </div>
             </div>
         </div>
+        <!-- Удалить слова -->
         <div class="modal fade" id="deleteWordsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteWordsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -212,7 +179,12 @@ function print_select(array $data, string $name): void
                     </div>
                     <div class="modal-body">
                         <form id="deleteWordsForm">
-                            <?php print_select($dictionaries, "select-delete"); ?>
+                            <div class="form-group mb-3">
+                                <label for="select-delete">Выберите словарь:</label>
+                                <select id="select-delete" class="form-select" multiple name="select-delete" aria-label="Select dictionary" required>
+                                    <?php print_select_options($dictionaries); ?>
+                                </select>
+                            </div>
                             <div class="form-group mb-3">
                                 <label for="deleteWordsInput" class="form-label">Введите слова для удаления</label>
                                 <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Каждое слово должно быть на отдельной строке. Слова длиной более 32 букв будут обрезаны."><i class="fas fa-question-circle"></i></span>
@@ -228,12 +200,24 @@ function print_select(array $data, string $name): void
             </div>
         </div>
 
-        <?php print_dictionaries($dictionaries); ?>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID словаря</th>
+                                <th>Название</th>
+                                <th>Язык</th>
+                                <th>Количество слов</th>
+                            </tr>
+                        </thead>
+                        <?php print_dictionaries($dictionaries); ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
-        <!-- Bootstrap and jQuery scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="assets/js/main.js"></script>
-
-    </body>
-</html>
+<?php require '../footer.php'; ?>
