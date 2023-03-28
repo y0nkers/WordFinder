@@ -69,8 +69,8 @@ require '../header.php';
                         <span class="sr-only">Загрузка...</span>
                     </div>
                 </div>
-                <p class="h3 mb-4 font-italic">Пожалуйста, подождите...</p>
                 <p class="h3 mb-4 font-italic" id="loading-message"></p>
+                <p class="h4 mb-4 font-italic">Пожалуйста, подождите...</p>
             </div>
         </div>
 
@@ -96,7 +96,7 @@ require '../header.php';
                             </div>
                             <div class="form-group mb-3">
                                 <label for="select-language">Язык словаря: </label>
-                                <select class="form-select" name="select-language" id="select-language" aria-label="Select dictionary's language">
+                                <select class="form-select" name="select-language" id="select-language" aria-label="Select dictionary's language" required>
                                     <option disabled selected>Пожалуйста, подождите</option>
                                 </select>
                             </div>

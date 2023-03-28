@@ -1,3 +1,4 @@
+let language = "russian";
 let languages = null;
 let allowedChars = null;
 
@@ -14,14 +15,26 @@ $(document).ready(function () {
     // Элемент "загрузочный экран"
     let loading = $("#loading");
     let loadingMessage = $("#loading-message");
-    loading.hide();
+    loadingMessage.text("Загрузка доступных языков...");
 
-    let language = "russian";
     loadLanguages().then(_ => {
         console.log("Languages loaded!");
-        console.log(languages);
+
+        let select = $("#select-language");
+        select.empty();
+        // Добавляем в select каждый язык из json файла
+        $.each(languages, function (key, value) {
+            select.append($("<option>", {
+                value: key,
+                text: value.name
+            }));
+        });
+
+        loadingMessage.text("Загрузка доступных словарей...");
+        findDictionaries(language);
+        loading.hide();
+
         allowedChars = languages[language].allowedChars;
-        console.log(allowedChars);
     });
 
     // Добавляем загрузочный экран при отправке запроса
@@ -46,18 +59,6 @@ $(document).ready(function () {
         let dictionaries = $("#select-dictionaries").val();
         if (!(Array.isArray(dictionaries) && dictionaries.length)) {
             alert("Для поиска необходимо выбрать хотя бы один словарь!");
-            return;
-        }
-
-        // Массив со языками всех выбранных словарей
-        const languages = $('#select-dictionaries option:selected').map(function () {
-            return $(this).data('language');
-        }).get();
-
-        // Проверяем чтобы у всех выбранных словарей был один и тот же язык
-        const allLanguagesEqual = languages.every(language => language === languages[0]);
-        if (!allLanguagesEqual) {
-            alert("Язык выбранных словарей не должен различаться!");
             return;
         }
 
@@ -200,7 +201,48 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#select-language").change(function () {
+        loadingMessage.text("Загрузка доступных словарей...");
+        loading.show()
+        let language = $(this).find(':selected').val();
+        findDictionaries(language);
+        loading.hide();
+    });
 });
+
+// Получение списка словарей определённого языка
+function findDictionaries(language) {
+    // Отправляем AJAX-запрос на сервер
+    $.ajax({
+        url: 'core/dictionary.php',
+        method: 'GET',
+        dataType: 'json',
+        contentType: false,
+        cache: false,
+        data: {language: language},
+        success: function (response) {
+            let select = $("#select-dictionaries");
+            select.empty();
+
+            // Заполняем select найденными словарями
+            if (response.status === true) {
+                let dictionaries = JSON.parse(response.dictionaries);
+                // Для каждого словаря создаём элемент option
+                dictionaries.forEach(dictionary => {
+                    select.append($("<option>", {
+                        value: dictionary["id"],
+                        text: dictionary["name"] + " (" + dictionary["count"] + " " + getNoun(dictionary["count"], 'слово', 'слова', 'слов') + ")"
+                    }));
+                });
+            } else alert("В системе отсутствуют словари для выбранного языка поиска.");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseText); // выводим ответ сервера
+            console.log('Error: ' + textStatus + ' - ' + errorThrown);
+        }
+    });
+}
 
 // Обработчик смены режима поиска
 function checkForMode(obj) {
@@ -282,4 +324,21 @@ function validateField(field, data, pattern) {
         return false;
     }
     return true;
+}
+
+// Окончание слова в зависимости от количества
+function getNoun(number, one, two, five) {
+    let n = Math.abs(number);
+    n %= 100;
+    if (n >= 5 && n <= 20) {
+        return five;
+    }
+    n %= 10;
+    if (n === 1) {
+        return one;
+    }
+    if (n >= 2 && n <= 4) {
+        return two;
+    }
+    return five;
 }
