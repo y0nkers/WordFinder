@@ -35,6 +35,10 @@ $(document).ready(function () {
         $("#selectDeleteWords option").each(function () {
             convertCodeToName(this);
         });
+
+        $("td.dictionary-language").each(function () {
+            $(this).text(languages[$(this).text()].name);
+        });
     });
 
     // Добавляем загрузочный экран при отправке запроса
@@ -244,13 +248,13 @@ function validateFileType() {
     }
 }
 
-function convertCodeToName(option) {
-    let text = $(option).text();
+function convertCodeToName(element) {
+    let text = $(element).text();
     let match = text.match(/\[(.+)\]/);
     if (match && match.length > 1) {
         let languageCode = match[1];
         let languageName = languages[languageCode].name;
         text = text.replace(match[0], "[" + languageName + "]");
-        $(option).text(text);
+        $(element).text(text);
     }
 }

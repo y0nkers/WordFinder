@@ -34,7 +34,7 @@ function print_dictionaries(array $data): void
         $table_data .= "<tr>";
         $table_data .= "<td>" . $data[$i]["id"] . "</td>";
         $table_data .= "<td>" . $data[$i]["name"] . "</td>";
-        $table_data .= "<td>" . $data[$i]["language"] . "</td>";
+        $table_data .= "<td class='dictionary-language'>" . $data[$i]["language"] . "</td>";
         $table_data .= "<td>" . $data[$i]["count"] . "</td>";
         $table_data .= "</tr>";
     }
