@@ -27,6 +27,7 @@ require __DIR__ . '/header.php';
 
 <main class="container-fluid container-xl">
     <div class="pt-5 pb-3">
+        <!-- Загрузочный экран -->
         <div id="loading">
             <div class="container-fluid bg-light border border-dark rounded-3">
                 <div class="d-flex justify-content-center mt-4">
@@ -35,9 +36,11 @@ require __DIR__ . '/header.php';
                     </div>
                 </div>
                 <p class="h3 mb-4 font-italic">Пожалуйста, подождите...</p>
+                <p class="h3 mb-4 font-italic" id="loading-message"></p>
             </div>
         </div>
 
+        <!-- Форма поиска -->
         <div class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
@@ -95,7 +98,7 @@ require __DIR__ . '/header.php';
                                     <input type="text" class="form-control" id="exclude" name="exclude" placeholder="Введите буквы, которые надо исключить">
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="limit" aria-label="Word limit per page">
+                                    <select class="form-select" name="limit" id="limit" aria-label="Word limit per page">
                                         <option value="20" selected>20</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
@@ -114,6 +117,7 @@ require __DIR__ . '/header.php';
             </div>
         </div>
 
+        <!-- Результаты поиска -->
         <div id="results-container" class="container mt-5 d-none">
             <div class="row justify-content-center">
                 <div class="col-md-6">

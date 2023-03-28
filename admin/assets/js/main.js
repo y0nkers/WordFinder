@@ -1,7 +1,56 @@
+let languages = null;
+
+async function loadLanguages() {
+    const response = await fetch('/assets/js/languages.json');
+    languages = await response.json();
+}
 $(document).ready(function () {
     // bootstrap тултипы (подсказки к полям ввода)
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    // Элемент "загрузочный экран"
+    let loading = $("#loading");
+    let loadingMessage = $("#loading-message");
+    loadingMessage.text("Загрузка доступных языков...");
+
+    loadLanguages().then(_ => {
+        loading.hide();
+        console.log("Languages loaded!");
+
+        let select = $("#select-language");
+        select.empty();
+        // Добавляем в select каждый язык из json файла
+        $.each(languages, function (key, value) {
+           select.append($("<option>", {
+               value: key,
+               text: value.name
+           }));
+        });
+
+        $("#selectAddWords option").each(function () {
+            convertCodeToName(this);
+        });
+
+        $("#selectDeleteWords option").each(function () {
+            convertCodeToName(this);
+        });
+    });
+
+    // Добавляем загрузочный экран при отправке запроса
+    $(document).ajaxSend(function () {
+        loading.show();
+        loadingMessage.text("Выполнение операции...");
+        $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
+        $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
+    });
+
+    // Убираем загрузочный экран при завершении запроса
+    $(document).ajaxComplete(function () {
+        loading.hide();
+        $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
+        $('.overlay').remove(); // Убираем затемнение
+    });
 
     $("#addDictionaryWords").change(validateFileType);
     $("#addWordsFile").change(validateFileType);
@@ -10,7 +59,7 @@ $(document).ready(function () {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
         let name = $("#addDictionaryName").val();
-        let language = $("#addDictionaryLanguage").val();
+        let language = $("#select-language").find(':selected').val();
         let file = document.getElementById('addDictionaryWords').files[0];
 
         let data = new FormData();
@@ -192,5 +241,16 @@ function validateFileType() {
     if (!(fileExtension === "txt" || fileExtension === "text")) {
         alert("Расширение файла должно быть .txt!");
         this.value = "";
+    }
+}
+
+function convertCodeToName(option) {
+    let text = $(option).text();
+    let match = text.match(/\[(.+)\]/);
+    if (match && match.length > 1) {
+        let languageCode = match[1];
+        let languageName = languages[languageCode].name;
+        text = text.replace(match[0], "[" + languageName + "]");
+        $(option).text(text);
     }
 }

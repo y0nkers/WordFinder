@@ -1,8 +1,10 @@
 {
   "russian": {
+    "name": "Русский",
     "allowedChars": "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
   },
   "english": {
+    "name": "Английский",
     "allowedChars": "abcdefghijklmnopqrstuvwxyz"
   }
 }

@@ -50,7 +50,7 @@ function print_select_options(array $data): void
 {
     $select_html = "";
     foreach ($data as $item) {
-        $select_html .= '<option value="' . $item["id"] . '">' . $item["name"] . ' [' . $item["language"] . ']' . '</option>';
+        $select_html .= '<option value="' . $item["id"] . '" data-language="'. $item["language"] . '">' . $item["name"] . ' [' . $item["language"] . ']' . '</option>';
     }
     echo $select_html;
 }
@@ -61,6 +61,19 @@ require '../header.php';
 
 <main class="container-fluid container-xl pt-5">
     <div class="pt-5 pb-3">
+        <!-- Загрузочный экран -->
+        <div id="loading">
+            <div class="container-fluid bg-light border border-dark rounded-3">
+                <div class="d-flex justify-content-center mt-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Загрузка...</span>
+                    </div>
+                </div>
+                <p class="h3 mb-4 font-italic">Пожалуйста, подождите...</p>
+                <p class="h3 mb-4 font-italic" id="loading-message"></p>
+            </div>
+        </div>
+
         <!-- Кнопки вызова диалоговых окон -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteDictionaryModal">Удалить словарь</button>
@@ -82,8 +95,10 @@ require '../header.php';
                                 <input type="text" class="form-control" id="addDictionaryName" name="addDictionaryName" placeholder="Будет отображаться у пользователя при выборе" maxlength="32" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="addDictionaryLanguage">Язык словаря:</label>
-                                <input type="text" class="form-control" id="addDictionaryLanguage" name="addDictionaryLanguage" placeholder="Позволяет использовать несколько словарей одного языка" maxlength="32" required>
+                                <label for="select-language">Язык словаря: </label>
+                                <select class="form-select" name="select-language" id="select-language" aria-label="Select dictionary's language">
+                                    <option disabled selected>Пожалуйста, подождите</option>
+                                </select>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="addDictionaryWords">Загрузите файл со словами</label>
@@ -134,7 +149,7 @@ require '../header.php';
                         <form id="addWordsForm">
                             <div class="form-group mb-3">
                                 <label for="select-add">Выберите словарь:</label>
-                                <select id="select-add" class="form-select" multiple name="select-add" aria-label="Select dictionary" required>
+                                <select id="selectAddWords" class="form-select" multiple name="select-add" aria-label="Select dictionary" required>
                                     <?php print_select_options($dictionaries); ?>
                                 </select>
                             </div>
@@ -181,7 +196,7 @@ require '../header.php';
                         <form id="deleteWordsForm">
                             <div class="form-group mb-3">
                                 <label for="select-delete">Выберите словарь:</label>
-                                <select id="select-delete" class="form-select" multiple name="select-delete" aria-label="Select dictionary" required>
+                                <select id="selectDeleteWords" class="form-select" multiple name="select-delete" aria-label="Select dictionary" required>
                                     <?php print_select_options($dictionaries); ?>
                                 </select>
                             </div>

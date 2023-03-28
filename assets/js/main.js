@@ -13,6 +13,7 @@ $(document).ready(function () {
 
     // Элемент "загрузочный экран"
     let loading = $("#loading");
+    let loadingMessage = $("#loading-message");
     loading.hide();
 
     let language = "russian";
@@ -26,6 +27,7 @@ $(document).ready(function () {
     // Добавляем загрузочный экран при отправке запроса
     $(document).ajaxSend(function () {
         loading.show();
+        loadingMessage.text("Выполнение запроса...");
         $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
         $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
     });
