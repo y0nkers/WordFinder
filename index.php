@@ -63,11 +63,11 @@ require __DIR__ . '/header.php';
                                 <div class="form-group mb-3">
                                     <label>Режим поиска:</label><br>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="mode" id="mode-normal" value="normal" onchange="checkForMode(this)" checked>
+                                        <input class="form-check-input" type="radio" name="mode" id="mode-normal" value="normal" checked>
                                         <label class="form-check-label" for="mode-normal">Обычный</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="mode" id="mode-extended" value="extended" onchange="checkForMode(this)">
+                                        <input class="form-check-input" type="radio" name="mode" id="mode-extended" value="extended">
                                         <label class="form-check-label" for="mode-extended">Расширенный</label>
                                     </div>
                                 </div>

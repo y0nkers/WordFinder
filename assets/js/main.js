@@ -1,9 +1,9 @@
 let language = "russian";
+let patternBase = "а-яё";
 let languages = null;
-let allowedChars = null;
 
 async function loadLanguages() {
-    const response = await fetch('assets/js/languages.json');
+    const response = await fetch('/languages.json');
     languages = await response.json();
 }
 
@@ -19,7 +19,6 @@ $(document).ready(function () {
 
     loadLanguages().then(_ => {
         console.log("Languages loaded!");
-
         let select = $("#select-language");
         select.empty();
         // Добавляем в select каждый язык из json файла
@@ -33,8 +32,6 @@ $(document).ready(function () {
         loadingMessage.text("Загрузка доступных словарей...");
         findDictionaries(language);
         loading.hide();
-
-        allowedChars = languages[language].allowedChars;
     });
 
     // Добавляем загрузочный экран при отправке запроса
@@ -56,6 +53,8 @@ $(document).ready(function () {
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
+        let language = $("#select-language").val();
+
         let dictionaries = $("#select-dictionaries").val();
         if (!(Array.isArray(dictionaries) && dictionaries.length)) {
             alert("Для поиска необходимо выбрать хотя бы один словарь!");
@@ -71,7 +70,6 @@ $(document).ready(function () {
 
         let data = validateData(mode);
         if (data == null) return;
-
         let limit = $("#limit").find(':selected').val();
         let compound_words = $("#compound-words-checkbox").is(':checked');
 
@@ -82,7 +80,7 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: false,
             cache: false,
-            data: {dictionaries: dictionaries, mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
+            data: {dictionaries: dictionaries, language: language, mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
             success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {
@@ -104,14 +102,17 @@ $(document).ready(function () {
     $('input[type="text"]').on('input', function () {
         let text = $(this).val().toUpperCase();
         let input = $(this).attr('id');
+        let pattern;
         switch (input) {
             case "mask":
-                $(this).val(text.replace(/[^а-я?*]/gi, ''));
+                pattern = makePattern(patternBase, "[^", "?*]", "i"); // /[^a-zA-Z?*]/i;
+                $(this).val(text.replace(pattern, ''));
                 break;
             case "start":
             case "end":
             case "contains":
-                $(this).val(text.replace(/[^а-я?]/gi, ''));
+                pattern = makePattern(patternBase, "[^", "?]", "i"); // /[^a-zA-Z?]/i;
+                $(this).val(text.replace(pattern, ''));
                 break;
             case "include":
             case "exclude":
@@ -121,11 +122,20 @@ $(document).ready(function () {
                     $(this).val(text.slice(0, -1));
                     return false;
                 }
-                $(this).val(text.replace(/[^а-я]/gi, ''));
+                pattern = makePattern(patternBase, "[^", "]", "i"); // /[^a-zA-Z]/i;
+                $(this).val(text.replace(pattern, ''));
                 break;
             default:
                 break;
         }
+    });
+
+    $("input[name=length]").on('input', function () {
+        $(this).val($(this).val().replace(/[^0-9]/i, ''));
+    });
+
+    $("input[type=radio][name=mode]").change(function () {
+        checkForMode(this);
     });
 
     checkForMode(document.getElementById("mode-normal"));
@@ -202,11 +212,14 @@ $(document).ready(function () {
         });
     });
 
+    // Смеена языка поиска
     $("#select-language").change(function () {
         loadingMessage.text("Загрузка доступных словарей...");
         loading.show()
-        let language = $(this).find(':selected').val();
+        language = $(this).find(':selected').val();
+        patternBase = languages[language].regexp;
         findDictionaries(language);
+        clearSearchForm();
         loading.hide();
     });
 });
@@ -242,6 +255,17 @@ function findDictionaries(language) {
             console.log('Error: ' + textStatus + ' - ' + errorThrown);
         }
     });
+}
+
+// Очистка всех полей формы после смены языка
+function clearSearchForm() {
+    $("#mask").val("");
+    $("#length").val("");
+    $("#start").val("");
+    $("#end").val("");
+    $("#contains").val("");
+    $("#include").val("");
+    $("#exclude").val("");
 }
 
 // Обработчик смены режима поиска
@@ -282,11 +306,9 @@ function hasDuplicates(str1, str2) {
 // Валидация всех полей, введённых пользователем
 function validateData(mode) {
     let data = [];
-    // TODO: get pattern for input value from json/server based on current language
     if (mode === 'normal') {
         let mask = $("#mask").val();
-
-        let pattern = /[^а-я?*]/gi;
+        let pattern = makePattern(patternBase, "^[", "?*]+$", "i"); // /^[a-zA-Z?*]+$/i;
         if (!validateField("Маска слова", mask, pattern)) return;
 
         data = [mask];
@@ -294,17 +316,17 @@ function validateData(mode) {
         let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
             contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
 
-        if (length < 2 || length > 32) {
+        if ((length !== "") && length < 2 || length > 32) {
             alert("Длина слова указана неверно!");
             return;
         }
 
-        let pattern = /[^а-я?]/gi;
+        let pattern = makePattern(patternBase, "^[", "?]*$", "i"); // /^[a-zA-Z?]*$/i;
         if (!validateField("Начало слова", start, pattern)) return;
         if (!validateField("Конец слова", end, pattern)) return;
         if (!validateField("Обязательное буквосочетание", contains, pattern)) return;
 
-        pattern = /[^а-я]/gi;
+        pattern = makePattern(patternBase, "^[", "]*$", "i"); // /^[a-zA-Z]*$/i;
         if (!validateField("Обязательные буквы", include, pattern)) return;
         if (!validateField("Исключённые буквы", exclude, pattern)) return;
 
@@ -317,28 +339,28 @@ function validateData(mode) {
     return data;
 }
 
-// true - данные поля валидны, иначе false
+// Проверка введённых в поле данных на корректность.
+// pattern - шаблон, которому должны соответствовать данные
 function validateField(field, data, pattern) {
-    if (pattern.test(data)) {
-        alert("Проверьте правильность ввода поля: " + field);
-        return false;
-    }
-    return true;
+    if (pattern.test(data)) return true;
+    // Если данные не соответствуют шаблону
+    alert("Проверьте правильность ввода поля: " + field);
+    return false;
 }
 
 // Окончание слова в зависимости от количества
 function getNoun(number, one, two, five) {
     let n = Math.abs(number);
     n %= 100;
-    if (n >= 5 && n <= 20) {
-        return five;
-    }
+    if (n >= 5 && n <= 20) return five;
     n %= 10;
-    if (n === 1) {
-        return one;
-    }
-    if (n >= 2 && n <= 4) {
-        return two;
-    }
+    if (n === 1) return one;
+    if (n >= 2 && n <= 4) return two;
     return five;
+}
+
+// Полный шаблон regexp с флагами
+function makePattern(base, prefix, postfix, flags) {
+    let pattern = prefix + base + postfix;
+    return RegExp(pattern, flags);
 }

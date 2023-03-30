@@ -9,10 +9,11 @@ require_once "class/Paginator.php";
 $query = "";
 if (!isset($_GET["query"])) {
     $dictionaries = $_GET["dictionaries"];
+    $language = $_GET["language"];
     $mode = $_GET["mode"];
     $data = json_decode($_GET['data'], true);
     $compound_words = json_decode($_GET["compound_words"]);
-    $constructor = new QueryConstructor($dictionaries, $mode, $data, $compound_words);
+    $constructor = new QueryConstructor($dictionaries, $language, $mode, $data, $compound_words);
     $query = $constructor->constructQuery();
 } else $query = $_GET["query"];
 

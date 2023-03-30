@@ -4,6 +4,8 @@ class QueryConstructor
 {
     // Массив id таблиц, в которых нужно производить поиск
     private array $_dictionaries;
+    // Выбранный язык поиска
+    private string $_language;
     // Режим поиска (normal/extended)
     private string $_mode;
     // Массив с параметрами поиска
@@ -11,12 +13,14 @@ class QueryConstructor
     // Искать ли составные слова
     private bool $_compound_words;
 
-    public function __construct($dictionaries, string $mode, $data, bool $compound_words)
+    public function __construct(array $dictionaries, string $language, string $mode, array $data, bool $compound_words)
     {
         $this->_dictionaries = $dictionaries;
+        $this->_language = $language;
         $this->_mode = $mode;
         $this->_data = $data;
         $this->_compound_words = $compound_words;
+
     }
 
     // Подготовка строки запроса
@@ -36,11 +40,12 @@ class QueryConstructor
 
     // Подготовка condition части запроса (WHERE ... )
     private function constructConditionPart(): string {
+        $base = $this->getPatternBase("/../../languages.json");
         $query = " WHERE ";
-
         if ($this->_mode == "normal") {
             $mask = $this->_data[0];
-            $this->validateField("Маска слова", $mask, '/^[А-яёЁ?*]+$/u');
+            $pattern = $this->makePattern($base, "^[", "?*]+$", "i");
+            $this->validateField("Маска слова", $mask, $pattern); // '/^[a-zA-Z?*]+$/i'
             $mask = str_replace('?', '_', $mask);
             $mask = str_replace('*', '%', $mask);
             $query .= "word LIKE '$mask'";
@@ -57,22 +62,25 @@ class QueryConstructor
             }
 
             $start = $this->_data[1];
-            $this->validateField("Начало слова", $start, '/^[А-яёЁ?]+$/u');
+            $pattern = $this->makePattern($base, "^[", "?]+$", "i");
+            $this->validateField("Начало слова", $start, $pattern); // '/^[a-zA-Z?]+$/u'
             $start = str_replace('?', '_', $start);
 
             $end = $this->_data[2];
-            $this->validateField("Конец слова", $end, '/^[А-яёЁ?]+$/u');
+            $this->validateField("Конец слова", $end, $pattern); // '/^[a-zA-Z?]+$/u'
             $end = str_replace('?', '_', $end);
 
             $contains = $this->_data[3];
-            $this->validateField("Обязательное сочетание", $contains, '/^[А-яёЁ?]+$/u');
+            $this->validateField("Обязательное сочетание", $contains, $pattern); // '/^[a-zA-Z?]+$/u'
             $contains = str_replace('?', '_', $contains);
 
+            $pattern = $this->makePattern($base, "^[", "]+$", "i");
             $include = $this->_data[4];
-            $this->validateField("Обязательные буквы", $include, '/^[А-яёЁ]+$/u');
+            $this->validateField("Обязательные буквы", $include, $pattern); // '/^[a-zA-Z]+$/u'
 
+            $pattern = $this->makePattern($base, "^[", "-]+$", "i");
             $exclude = $this->_data[5];
-            $this->validateField("Исключённые буквы", $exclude, '/^[А-яёЁ-]+$/u');
+            $this->validateField("Исключённые буквы", $exclude, $pattern); // '/^[a-zA-Z-]+$/u'
 
             if (!empty($length)) $query .= "CHAR_LENGTH(word) = $length AND ";
             $query .= "word LIKE '$start%$contains%$end' ";
@@ -87,6 +95,18 @@ class QueryConstructor
             if (!empty($exclude)) $query .= " AND word NOT REGEXP '[$exclude]'";
         }
         return $query;
+    }
+
+    // Получение из json шаблона для текущего языка поиска
+    private function getPatternBase(string $path): string {
+        $json = file_get_contents(__DIR__ . $path);
+        $data = json_decode($json, true);
+        return $data[$this->_language]["regexp"];
+    }
+
+    // Полный шаблон regexp с флагами
+    private function makePattern(string $base, string $prefix, string $postfix, string $flags): string {
+        return '/' . $prefix . $base . $postfix . '/' . $flags;
     }
 
     // Проверка поля на корректность введённых данных

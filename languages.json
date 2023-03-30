@@ -1,0 +1,10 @@
+{
+  "russian": {
+    "name": "Русский",
+    "regexp": "а-яёА-ЯЁ"
+  },
+  "english": {
+    "name": "Английский",
+    "regexp": "a-zA-Z"
+  }
+}
