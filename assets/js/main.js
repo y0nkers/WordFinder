@@ -98,6 +98,10 @@ $(document).ready(function () {
         });
     });
 
+    $("#resetForm").click(function () {
+        clearSearchForm();
+    });
+
     // Обработчик ввода в поле параметров
     $('input[type="text"]').on('input', function () {
         let text = $(this).val().toUpperCase();
@@ -212,7 +216,7 @@ $(document).ready(function () {
         });
     });
 
-    // Смеена языка поиска
+    // Смена языка поиска
     $("#select-language").change(function () {
         loadingMessage.text("Загрузка доступных словарей...");
         loading.show()
@@ -272,23 +276,15 @@ function clearSearchForm() {
 function checkForMode(obj) {
     let mode = obj.value;
     if (mode === 'normal') {
-        // Включаем поле для ввода маски, блокируем остальные поля
-        $('#mask').prop('disabled', false);
-        $('#length').prop('disabled', true);
-        $('#start').prop('disabled', true);
-        $('#end').prop('disabled', true);
-        $('#contains').prop('disabled', true);
-        $('#include').prop('disabled', true);
-        $('#exclude').prop('disabled', true);
+        $("#normal-mode-parameters").show();
+        $("#extended-mode-parameters-1").hide();
+        $("#extended-mode-parameters-2").hide();
+        $("#extended-mode-parameters-3").hide();
     } else if (mode === 'extended') {
-        // Включаем все поля, кроме поля для ввода маски
-        $('#mask').prop('disabled', true);
-        $('#length').prop('disabled', false);
-        $('#start').prop('disabled', false);
-        $('#end').prop('disabled', false);
-        $('#contains').prop('disabled', false);
-        $('#include').prop('disabled', false);
-        $('#exclude').prop('disabled', false);
+        $("#normal-mode-parameters").hide();
+        $("#extended-mode-parameters-1").show();
+        $("#extended-mode-parameters-2").show();
+        $("#extended-mode-parameters-3").show();
     }
 }
 
