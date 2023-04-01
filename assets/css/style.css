@@ -22,6 +22,10 @@ ul.pagination a:focus {
     z-index: 9998; /* Устанавливаем z-index ниже, чем у загрузочного экрана, но выше, чем у других элементов на странице */
 }
 
-nav .navbar-nav li a{
+nav .navbar-nav li a {
     color: white !important;
+}
+
+.field-bg {
+    background-color: rgba(236, 240, 241, 1);
 }

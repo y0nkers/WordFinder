@@ -1,4 +1,4 @@
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-2 my-3 border-top">
+<footer class="d-flex flex-wrap justify-content-between align-items-center py-2 mt-3 border-top">
     <div class="container col-md-4 d-flex align-items-center">
         <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
             <img src="/assets/img/favicon.ico" width="32" height="32" alt="Поиск слов">

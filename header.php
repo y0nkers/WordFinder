@@ -29,10 +29,10 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" itemprop="url" href="/">Главная</a>
+                            <a class="nav-link link-success" itemprop="url" href="/">Поиск слов</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/">...</a>
+                            <a class="nav-link link-success" itemprop="url" href="/">Инструкция по применению</a>
                         </li>
                     </ul>
                 </div>
