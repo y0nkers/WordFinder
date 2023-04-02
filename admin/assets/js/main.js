@@ -1,7 +1,7 @@
 let languages = null;
 
 async function loadLanguages() {
-    const response = await fetch('/assets/js/languages.json');
+    const response = await fetch('/languages.json');
     languages = await response.json();
 }
 $(document).ready(function () {

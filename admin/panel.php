@@ -32,13 +32,23 @@ function print_dictionaries(array $data): void
     $table_data = "";
     for ($i = 0; $i < count($data); $i++) {
         $table_data .= "<tr>";
-        $table_data .= "<td>" . $data[$i]["id"] . "</td>";
         $table_data .= "<td>" . $data[$i]["name"] . "</td>";
-        $table_data .= "<td class='dictionary-language'>" . $data[$i]["language"] . "</td>";
-        $table_data .= "<td>" . $data[$i]["count"] . "</td>";
+        $table_data .= "<td class='dictionary-language text-center'>" . $data[$i]["language"] . "</td>";
+        $table_data .= "<td class='text-center'>" . $data[$i]["count"] . " " . get_noun($data[$i]["count"], 'слово', 'слова', 'слов') . "</td>";
         $table_data .= "</tr>";
     }
     echo $table_data;
+}
+
+// Окончание слова в зависимости от количества
+function get_noun($number, $one, $two, $five) {
+    $n = abs($number);
+    $n %= 100;
+    if ($n >= 5 && $n <= 20) return $five;
+    $n %= 10;
+    if ($n === 1) return $one;
+    if ($n >= 2 && $n <= 4) return $two;
+    return $five;
 }
 
 /**
@@ -74,12 +84,6 @@ require '../header.php';
             </div>
         </div>
 
-        <!-- Кнопки вызова диалоговых окон -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteDictionaryModal">Удалить словарь</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWordsModal">Добавить слова</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteWordsModal">Удалить слова</button>
-
         <!-- Добавить словарь -->
         <div class="modal fade" id="addDictionaryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addDictionaryModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -105,7 +109,7 @@ require '../header.php';
                                 <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Текстовый файл должен содержать на каждой строке только одно слово длиной не более 32 букв (остальные буквы будут обрезаны)."><i class="fas fa-question-circle"></i></span>
                                 <input type="file" id="addDictionaryWords" name="addDictionaryWords" accept="text/plain" required>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer pb-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                                 <button type="submit" class="btn btn-primary">Добавить</button>
                             </div>
@@ -128,7 +132,7 @@ require '../header.php';
                                 <label for="deleteDictionaryName">Название словаря:</label>
                                 <input type="text" class="form-control" id="deleteDictionaryName" name="deleteDictionaryName" placeholder="Введите название словаря для удаления" required>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer pb-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                                 <button type="submit" class="btn btn-primary">Удалить</button>
                             </div>
@@ -175,7 +179,7 @@ require '../header.php';
                                 <input id="addWordsFile" type="file" name="addWordsFile" accept="text/plain" required>
                                 <textarea class="form-control d-none" id="addWordsTextarea" rows="3" disabled required></textarea>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer pb-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                                 <button type="submit" class="btn btn-primary">Добавить</button>
                             </div>
@@ -205,7 +209,7 @@ require '../header.php';
                                 <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Каждое слово должно быть на отдельной строке. Слова длиной более 32 букв будут обрезаны."><i class="fas fa-question-circle"></i></span>
                                 <textarea class="form-control" id="deleteWordsInput" rows="3" required></textarea>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer pb-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                                 <button type="submit" class="btn btn-primary">Удалить</button>
                             </div>
@@ -215,20 +219,32 @@ require '../header.php';
             </div>
         </div>
 
-        <div class="container mt-5">
+        <div class="container mt-3">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <table class="table table-striped">
+                    <h3 class="text-center">Список доступных словарей</h3>
+                    <table class="table table-bordered table-hover table-striped table-secondary border border-dark">
                         <thead>
-                            <tr>
-                                <th>ID словаря</th>
-                                <th>Название</th>
-                                <th>Язык</th>
-                                <th>Количество слов</th>
+                            <tr class="table-dark text-center">
+                                <th class="col-6" style="width: 50%;">Название</th>
+                                <th class="col-2" style="width: 25%;">Язык</th>
+                                <th class="col-2" style="width: 25%;">Количество слов</th>
                             </tr>
                         </thead>
                         <?php print_dictionaries($dictionaries); ?>
                     </table>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h3 class="text-center">Доступные действия</h3>
+                    <!-- Кнопки вызова диалоговых окон -->
+                    <div class="d-flex align-items-center justify-content-evenly gap-2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteDictionaryModal">Удалить словарь</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWordsModal">Добавить слова</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteWordsModal">Удалить слова</button>
+                    </div>
                 </div>
             </div>
         </div>
