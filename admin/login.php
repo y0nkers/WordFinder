@@ -14,7 +14,7 @@ if (isset($_GET['login']) && isset($_GET['password'])) {
 
     $_SESSION['login'] = $login;
     $_SESSION['password'] = $password;
-    header('Location: panel.php');
+    header('Location: panel');
 }
 ?>
 

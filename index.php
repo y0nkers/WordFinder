@@ -89,7 +89,7 @@ require __DIR__ . '/header.php';
                                 <div class="row align-items-center mb-3">
                                     <div class="form-group">
                                         <label for="dictionaries[]">Выберите словари для поиска:</label>
-                                        <select id="select-dictionaries" class="form-select" multiple name="dictionaries[]" aria-label="Select dictionary" required>
+                                        <select id="select-dictionaries" class="form-select" multiple name="dictionaries[]" data-placeholder="Выберите словари" aria-label="Select dictionary" required>
                                             <?php print_select_options($dictionaries); ?>
                                         </select>
                                     </div>

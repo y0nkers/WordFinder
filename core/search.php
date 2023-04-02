@@ -48,10 +48,9 @@ $connect = null;
 function constructHTML($result, Paginator $paginator): string
 {
     $html_string = "<div class='container mt-3'>";
-    $html_string .= "<h2>Результаты поиска:</h2>";
+    $html_string .= "<h2 class='text-center'>Результаты поиска:</h2>";
     if ($result->total > 0) {
-        $html_string .= "<table class='table table-striped'>";
-        $html_string .= "<thead><tr><th></th></tr></thead>";
+        $html_string .= "<table class='table table-bordered table-hover table-striped table-secondary border border-dark'>";
         $html_string .= "<tbody>";
         for ($i = 0; $i < count($result->data); $i++) $html_string .= "<tr><td>" . (($result->page - 1) * $result->limit + $i + 1) . ". " . $result->data[$i]["word"] . "</td></tr>";
         $html_string .= "</tbody></table></div>";

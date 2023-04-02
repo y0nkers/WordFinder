@@ -276,11 +276,19 @@ function clearSearchForm() {
 function checkForMode(obj) {
     let mode = obj.value;
     if (mode === 'normal') {
+        $("#mask").prop('disabled', false);
+        $("#start").prop('disabled', true);
+        $("#end").prop('disabled', true);
+
         $("#normal-mode-parameters").show();
         $("#extended-mode-parameters-1").hide();
         $("#extended-mode-parameters-2").hide();
         $("#extended-mode-parameters-3").hide();
     } else if (mode === 'extended') {
+        $("#mask").prop('disabled', true);
+        $("#start").prop('disabled', false);
+        $("#end").prop('disabled', false);
+
         $("#normal-mode-parameters").hide();
         $("#extended-mode-parameters-1").show();
         $("#extended-mode-parameters-2").show();

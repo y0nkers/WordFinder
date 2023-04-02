@@ -32,7 +32,7 @@
                             <a class="nav-link link-success" itemprop="url" href="/">Поиск слов</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link link-success" itemprop="url" href="/">Инструкция по применению</a>
+                            <a class="nav-link link-success" itemprop="url" href="/howtouse">Инструкция по применению</a>
                         </li>
                     </ul>
                 </div>

@@ -50,7 +50,7 @@ class Paginator
         $first_page = (($this->_page - $this->_links) > 0) ? $this->_page - $this->_links : 1;
         $last_page = (($this->_page + $this->_links) < $pages_count) ? $this->_page + $this->_links : $pages_count;
 
-        $html = '<ul class="pagination pagination-sm">';
+        $html = '<ul class="justify-content-center pagination pagination-sm">';
 
         // Ссылка на прошлую страницу
         $class = ($this->_page == 1) ? "disabled" : "";
