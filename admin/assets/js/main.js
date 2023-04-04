@@ -41,20 +41,24 @@ $(document).ready(function () {
         });
     });
 
-    // Добавляем загрузочный экран при отправке запроса
-    $(document).ajaxSend(function () {
+    function showLoadingScreen() {
         loading.show();
         loadingMessage.text("Выполнение операции...");
         $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
         $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
-    });
+    }
 
-    // Убираем загрузочный экран при завершении запроса
-    $(document).ajaxComplete(function () {
+    function hideLoadingScreen() {
         loading.hide();
         $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
         $('.overlay').remove(); // Убираем затемнение
-    });
+    }
+
+    // Добавляем загрузочный экран при отправке запроса
+    $(document).ajaxSend(showLoadingScreen);
+
+    // Убираем загрузочный экран при завершении запроса
+    $(document).ajaxComplete(hideLoadingScreen);
 
     $("#addDictionaryWords").change(validateFileType);
     $("#addWordsFile").change(validateFileType);
