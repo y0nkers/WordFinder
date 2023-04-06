@@ -1,8 +1,9 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] != "GET") die();
 
-require_once "connect.php";
-/** @var PDO $connect */
+require_once "../class/DbConnect.php";
+$dbConnect = new DbConnect("user", "");
+$pdo = $dbConnect->getPDO();
 
 $word = $_GET["word"];
 $length = strlen($word);
@@ -20,7 +21,7 @@ else $end = mb_substr($word, -3, null,'UTF-8');
 
 // 1. Найти все словари
 $dictionaries = array();
-$stmt = $connect->query("SELECT `id` FROM `dictionaries`");
+$stmt = $pdo->query("SELECT `id` FROM `dictionaries`");
 while ($row = $stmt->fetch()) $dictionaries[] = $row["id"];
 
 // 2. Сформировать строку запроса по всем словарям
@@ -32,7 +33,7 @@ foreach ($dictionaries as $index => $dictionary) {
 }
 
 // 3. Выполнить запрос, получить данные
-$stmt = $connect->query($query);
+$stmt = $pdo->query($query);
 $results = [];
 $count = $stmt->rowCount();
 if ($count > 0)
@@ -56,3 +57,5 @@ $response = [
     "query" => $query
 ];
 echo json_encode($response);
+
+$dbConnect->closeConnection();

@@ -18,7 +18,7 @@ $(document).ready(function () {
                 if (response.status === false) {
                     alert(response.message);
                 } else {
-                    console.log(response.query);
+                    //console.log(response.query);
                     $("#search-results").html(response.message);
                     $("#results-container").removeClass("d-none");
                 }

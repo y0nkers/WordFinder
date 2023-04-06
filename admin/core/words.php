@@ -1,13 +1,15 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] != "POST") die();
 
-require_once "connect.php";
-/** @var PDO $connect */
+require_once "../../class/DbConnect.php";
 
 $type = $_POST['type'];
 $id = $_POST['id'];
 $dictionary = "dictionary_" . $id;
 $count = 0;
+
+$dbConnect = new DbConnect("admin", "wordfinder");
+$pdo = $dbConnect->getPDO();
 
 if ($type == 'add') {
     $mode = $_POST['mode'];
@@ -16,13 +18,13 @@ if ($type == 'add') {
 
         try {
             // Вставка слов в таблицу
-            $stmt = $connect->prepare("LOAD DATA INFILE :words IGNORE INTO TABLE $dictionary FIELDS TERMINATED BY '\r';");
+            $stmt = $pdo->prepare("LOAD DATA INFILE :words IGNORE INTO TABLE $dictionary FIELDS TERMINATED BY '\r';");
             $stmt->bindParam(':words', $words["tmp_name"]);
             $stmt->execute();
             $count = $stmt->rowCount();
 
             // Обновление счётчика слов в справочнике
-            $stmt = $connect->prepare("UPDATE `dictionaries` SET `count` = `count` + :count WHERE id = :id;");
+            $stmt = $pdo->prepare("UPDATE `dictionaries` SET `count` = `count` + :count WHERE id = :id;");
             $stmt->bindParam(':count', $count, PDO::PARAM_INT);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -39,12 +41,12 @@ if ($type == 'add') {
 
         try {
             // Вставка слов в таблицу
-            $stmt = $connect->prepare("INSERT IGNORE INTO $dictionary VALUES $values");
+            $stmt = $pdo->prepare("INSERT IGNORE INTO $dictionary VALUES $values");
             $stmt->execute();
             $count = $stmt->rowCount();
 
             // Обновление счётчика слов в справочнике
-            $stmt = $connect->prepare("UPDATE `dictionaries` SET `count` = `count` + :count WHERE id = :id;");
+            $stmt = $pdo->prepare("UPDATE `dictionaries` SET `count` = `count` + :count WHERE id = :id;");
             $stmt->bindParam(':count', $count, PDO::PARAM_INT);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -62,12 +64,12 @@ if ($type == 'add') {
 
     try {
         // Удаление слов из таблицы
-        $stmt = $connect->prepare("DELETE FROM $dictionary WHERE `word` IN ($values)");
+        $stmt = $pdo->prepare("DELETE FROM $dictionary WHERE `word` IN ($values)");
         $stmt->execute();
         $count = $stmt->rowCount();
 
         // Обновление счётчика слов в справочнике
-        $stmt = $connect->prepare("UPDATE `dictionaries` SET `count` = `count` - :count WHERE id = :id;");
+        $stmt = $pdo->prepare("UPDATE `dictionaries` SET `count` = `count` - :count WHERE id = :id;");
         $stmt->bindParam(':count', $count, PDO::PARAM_INT);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

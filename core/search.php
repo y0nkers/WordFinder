@@ -1,10 +1,9 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] != "GET") die();
 
-require_once "connect.php";
-/** @var PDO $connect */
-require_once "class/QueryConstructor.php";
-require_once "class/Paginator.php";
+require_once "../class/QueryConstructor.php";
+require_once "../class/DbConnect.php";
+require_once "../class/Paginator.php";
 
 $query = "";
 if (!isset($_GET["query"])) {
@@ -30,7 +29,8 @@ if (isset($_GET["sort_type"]) && isset($_GET["sort_order"])) {
 }
 
 // Выполняем запрос и обрабатываем результат
-$paginator = new Paginator($connect, $query, $links);
+$dbConnect = new DbConnect("user", "");
+$paginator = new Paginator($dbConnect, $query, $links);
 $result = $paginator->getData($limit, $page);
 
 $html_string = constructHTML($result, $paginator);
@@ -42,7 +42,7 @@ $response = [
 echo json_encode($response);
 
 // Закрываем соединение с базой данных
-$connect = null;
+$dbConnect->closeConnection();
 
 // Создать html строку на основе результатов запроса
 function constructHTML($result, Paginator $paginator): string

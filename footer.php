@@ -11,9 +11,15 @@
 <!-- Bootstrap and jQuery scripts -->
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-<?php if (basename($_SERVER['SCRIPT_FILENAME']) != "panel.php") echo '<script type="text/javascript" src="assets/js/helpers.js"></script>' ?>
-<?php if (basename($_SERVER['SCRIPT_FILENAME']) == "index.php") echo '<script type="text/javascript" src="assets/js/main.js"></script>' ?>
-<?php if (basename($_SERVER['SCRIPT_FILENAME']) == "rhyme.php") echo '<script type="text/javascript" src="assets/js/rhyme.js"></script>' ?>
+<?php
+// Файл (страница), в который подключается футер
+$file = basename($_SERVER['SCRIPT_FILENAME']);
+
+// Подключаем js в зависимости от страницы
+if ($file != "panel.php") echo '<script type="text/javascript" src="assets/js/helpers.js"></script>';
+if ($file == "index.php" || basename($_SERVER['SCRIPT_FILENAME']) == "panel.php") echo '<script type="text/javascript" src="assets/js/main.js"></script>';
+if ($file == "rhyme.php") echo '<script type="text/javascript" src="assets/js/rhyme.js"></script>';
+?>
 
 </body>
 </html>

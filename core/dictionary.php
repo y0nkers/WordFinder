@@ -1,10 +1,11 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] != "GET") die();
 
-require_once "connect.php";
-/** @var PDO $connect */
+require_once "../class/DbConnect.php";
 
-$stmt = $connect->prepare("SELECT `id`, `name`, `count` FROM `dictionaries` WHERE language = :language");
+$dbConnect = new DbConnect("user", "");
+$pdo = $dbConnect->getPDO();
+$stmt = $pdo->prepare("SELECT `id`, `name`, `count` FROM `dictionaries` WHERE language = :language");
 $stmt->bindParam(':language', $_GET['language']);
 $stmt->execute();
 
@@ -24,3 +25,5 @@ $response = [
     "dictionaries" => json_encode($results)
 ];
 echo json_encode($response);
+
+$dbConnect->closeConnection();

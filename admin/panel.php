@@ -15,12 +15,13 @@ if (!isset($_SESSION['created'])) {
     header('Location: login.php');
 }
 
-require_once "core/connect.php";
-/** @var PDO $connect */
+require_once "../class/DbConnect.php";
+$dbConnect = new DbConnect("admin", "wordfinder");
 
 $dictionaries = [];
-$stmt = $connect->query("SELECT * FROM `dictionaries`");
+$stmt = $dbConnect->getPDO()->query("SELECT * FROM `dictionaries`");
 while ($row = $stmt->fetch()) $dictionaries[] = $row;
+$dbConnect->closeConnection();
 
 /**
  * Вывод таблицы-справочника о всех имеющихся словарях

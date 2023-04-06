@@ -2,20 +2,20 @@
 
 class Paginator
 {
-    private PDO $_connect; // Подключение к БД
+    private DbConnect $_connect; // Подключение к БД
     private int $_limit; // Лимит слов на странице
     private int $_page; // Текущая страница
     private string $_query; // Подготовленная строка запроса
     private int $_total; // Количество найденных по запросу записей
     private int $_links; // Количество ссылок в каждую сторону от текущей
 
-    public function __construct(PDO $connect, string $query, int $links)
+    public function __construct(DbConnect $connect, string $query, int $links)
     {
         $this->_connect = $connect;
         $this->_query = $query;
         $this->_links = $links;
 
-        $result = $this->_connect->query($this->_query);
+        $result = $this->_connect->getPDO()->query($this->_query);
         $this->_total = $result->rowCount();
     }
 
@@ -27,7 +27,7 @@ class Paginator
 
         $query = $this->_query . " LIMIT " . (($this->_page - 1) * $this->_limit) . ", $this->_limit";
 
-        $query_result = $this->_connect->query($query);
+        $query_result = $this->_connect->getPDO()->query($query);
 
         $results = [];
         if ($query_result->rowCount() > 0)

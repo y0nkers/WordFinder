@@ -39,7 +39,8 @@ class QueryConstructor
     }
 
     // Подготовка condition части запроса (WHERE ... )
-    private function constructConditionPart(): string {
+    private function constructConditionPart(): string
+    {
         $base = $this->getPatternBase("/../../languages.json");
         $query = " WHERE ";
         if ($this->_mode == "normal") {
@@ -98,14 +99,16 @@ class QueryConstructor
     }
 
     // Получение из json шаблона для текущего языка поиска
-    private function getPatternBase(string $path): string {
+    private function getPatternBase(string $path): string
+    {
         $json = file_get_contents(__DIR__ . $path);
         $data = json_decode($json, true);
         return $data[$this->_language]["regexp"];
     }
 
     // Полный шаблон regexp с флагами
-    private function makePattern(string $base, string $prefix, string $postfix, string $flags): string {
+    private function makePattern(string $base, string $prefix, string $postfix, string $flags): string
+    {
         return '/' . $prefix . $base . $postfix . '/' . $flags;
     }
 

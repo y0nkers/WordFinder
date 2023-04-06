@@ -1,18 +1,20 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] != "POST") die();
 
-require_once "connect.php";
-/** @var PDO $connect */
+require_once "../../class/DbConnect.php";
 
 $type = $_POST['type'];
 $count = 0;
+
+$dbConnect = new DbConnect("admin", "wordfinder");
+$pdo = $dbConnect->getPDO();
 
 if ($type == 'add') {
     $words = $_FILES['words'];
 
     // Создаём запись о новом словаре
     try {
-        $stmt = $connect->prepare("INSERT INTO `dictionaries` (`name`, `language`) VALUES (:name, :language)");
+        $stmt = $pdo->prepare("INSERT INTO `dictionaries` (`name`, `language`) VALUES (:name, :language)");
         $stmt->bindParam(':name', $_POST['name']);
         $stmt->bindParam(':language', $_POST['language']);
         $stmt->execute();
@@ -22,17 +24,17 @@ if ($type == 'add') {
 
     // Создаём таблицу для словаря
     try {
-        $id = $connect->lastInsertId();
+        $id = $pdo->lastInsertId();
         $dictionary = "dictionary_" . $id;
         $query = "CREATE TABLE " . $dictionary . "( `word` VARCHAR(32) NOT NULL , UNIQUE (`word`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;";
-        $connect->query($query);
+        $pdo->query($query);
     } catch (PDOException $e) {
         errorHandler("Ошибка при создании таблицы для словаря.");
     }
 
     // Загружаем слова в созданную таблицу
     try {
-        $stmt = $connect->prepare("LOAD DATA INFILE :words IGNORE INTO TABLE $dictionary FIELDS TERMINATED BY '\r';");
+        $stmt = $pdo->prepare("LOAD DATA INFILE :words IGNORE INTO TABLE $dictionary FIELDS TERMINATED BY '\r';");
         $stmt->bindParam(':words', $words["tmp_name"]);
         $stmt->execute();
     } catch (PDOException $e) {
@@ -42,9 +44,9 @@ if ($type == 'add') {
     // Записываем количество добавленных слов в словарь
     try {
         $query = "SELECT COUNT(*) FROM " . $dictionary;
-        $count = $connect->query($query)->fetchColumn();
+        $count = $pdo->query($query)->fetchColumn();
 
-        $stmt = $connect->prepare("UPDATE `dictionaries` SET `count` = :count WHERE id = :id;");
+        $stmt = $pdo->prepare("UPDATE `dictionaries` SET `count` = :count WHERE id = :id;");
         $stmt->bindParam(':count', $count, PDO::PARAM_INT);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -56,7 +58,7 @@ if ($type == 'add') {
 
     // Поиск записи о словаре с введённым id
     try {
-        $stmt = $connect->prepare("SELECT id FROM `dictionaries` WHERE name = :name");
+        $stmt = $pdo->prepare("SELECT id FROM `dictionaries` WHERE name = :name");
         $stmt->bindParam(':name', $name);
         $stmt->execute();
 
@@ -69,7 +71,7 @@ if ($type == 'add') {
 
     // Удаление записи о словаре
     try {
-        $stmt = $connect->prepare("DELETE FROM `dictionaries` WHERE id = :id");
+        $stmt = $pdo->prepare("DELETE FROM `dictionaries` WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
     } catch (PDOException $e) {
@@ -79,7 +81,7 @@ if ($type == 'add') {
     // Удаление самого словаря
     try {
         $dictionary = "dictionary_" . $id;
-        $connect->query("DROP TABLE " . $dictionary);
+        $pdo->query("DROP TABLE " . $dictionary);
     } catch (PDOException $e) {
         errorHandler("Ошибка при удалении словаря. Словарь с таким именем не найден.");
     }
