@@ -2,44 +2,17 @@
 
 class Paginator
 {
-    private DbConnect $_connect; // Подключение к БД
-    private int $_limit; // Лимит слов на странице
     private int $_page; // Текущая страница
-    private string $_query; // Подготовленная строка запроса
-    private int $_total; // Количество найденных по запросу записей
+    private int $_limit; // Лимит слов на странице
     private int $_links; // Количество ссылок в каждую сторону от текущей
+    private int $_total; // Количество найденных по запросу записей
 
-    public function __construct(DbConnect $connect, string $query, int $links)
+    public function __construct(int $page, int $limit, int $links, int $total)
     {
-        $this->_connect = $connect;
-        $this->_query = $query;
-        $this->_links = $links;
-
-        $result = $this->_connect->getPDO()->query($this->_query);
-        $this->_total = $result->rowCount();
-    }
-
-    // Выполнить запрос к БД и вернуть результат
-    public function getData(int $limit = 10, int $page = 1): stdClass
-    {
-        $this->_limit = $limit;
         $this->_page = $page;
-
-        $query = $this->_query . " LIMIT " . (($this->_page - 1) * $this->_limit) . ", $this->_limit";
-
-        $query_result = $this->_connect->getPDO()->query($query);
-
-        $results = [];
-        if ($query_result->rowCount() > 0)
-            while ($row = $query_result->fetch()) $results[] = $row;
-
-        $result = new stdClass();
-        $result->page = $this->_page;
-        $result->limit = $this->_limit;
-        $result->total = $this->_total;
-        $result->data = $results;
-
-        return $result;
+        $this->_limit = $limit;
+        $this->_links = $links;
+        $this->_total = $total;
     }
 
     // Создание ссылок для перехода между страницами

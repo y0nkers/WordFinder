@@ -63,17 +63,18 @@ class RhymeFinder
         $stmt = $this->_connect->getPDO()->query($query);
         $results = array();
         $count = $stmt->rowCount();
-        if ($count > 0) while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row["word"];
+        if ($count > 0) while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
         return $results;
     }
 
     // Создание html элемента с результатами запроса
     private function constructHTML(array $results): string
     {
+        $count = count($results);
         $html = "<div class='container mt-3'><h2 class='text-center'>Результаты поиска:</h2>";
-        if (count($results) > 0) {
+        if ($count > 0) {
             $html .= "<div style='line-height: 1.4em;'>";
-            for ($i = 0; $i < count($results); $i++) $html .= $results[$i]["word"] . " ";
+            for ($i = 0; $i < $count; $i++) $html .= $results[$i]["word"] . " ";
         } else {
             $html .= "<p>Не найдены подходящие результаты для указанного запроса.</p>";
         }

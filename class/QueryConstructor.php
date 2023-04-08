@@ -31,7 +31,7 @@ class QueryConstructor
         $count = count($this->_dictionaries);
         // Выполняем SELECT запрос для каждого указанного словаря
         foreach ($this->_dictionaries as $index => $dictionary) {
-            $query .= "SELECT * FROM " . "dictionary_" . $dictionary . $condition;
+            $query .= "SELECT `word` FROM " . "dictionary_" . $dictionary . $condition;
             if ($index != $count - 1) $query .= " UNION ";
         }
 
@@ -41,7 +41,7 @@ class QueryConstructor
     // Подготовка condition части запроса (WHERE ... )
     private function constructConditionPart(): string
     {
-        $base = $this->getPatternBase("/../../languages.json");
+        $base = $this->getPatternBase("/../languages.json");
         $query = " WHERE ";
         if ($this->_mode == "normal") {
             $mask = $this->_data[0];

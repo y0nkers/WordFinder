@@ -178,7 +178,7 @@ require __DIR__ . '/header.php';
                         <label for="sortSelect">Сортировать по: </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortRadio" value="sortASC" id="sortASC">
+                        <input class="form-check-input" type="radio" name="sortRadio" value="sortASC" id="sortASC" checked>
                         <label class="form-check-label" for="sortASC">
                             Сортировать по возрастанию
                         </label>

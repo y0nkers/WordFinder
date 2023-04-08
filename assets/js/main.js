@@ -55,7 +55,7 @@ $(document).ready(function () {
                 if (response.status === false) {
                     alert(response.message);
                 } else {
-                    //console.log(response.query);
+                    console.log(response.query);
                     $("#search-results").html(response.message).attr("data-query", response.query);
                     $("#results-container").removeClass("d-none");
                 }
@@ -87,13 +87,18 @@ $(document).ready(function () {
         let query = $("#search-results").attr("data-query");
         let limit = $("#limit").find(':selected').val();
 
+        // Тип сортировки: по длине или по алфавиту
+        let sortType = $("#sortSelect").find(":selected").val();
+        // Порядок сортировки: по возрастанию или по убыванию
+        let sortOrder = $("input[type=radio][name=sortRadio]:checked").val();
+
         $.ajax({
             url: 'core/search.php',
             method: 'GET',
             dataType: 'json',
             contentType: false,
             cache: false,
-            data: {page: page, query: query, limit: limit},
+            data: {page: page, query: query, limit: limit, sort_type: sortType, sort_order: sortOrder},
             success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {
