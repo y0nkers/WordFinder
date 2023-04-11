@@ -68,7 +68,7 @@ class WordFinder
             $html_string .= "</tbody></table></div>";
             $html_string .= $this->_paginator->createLinks();
         } else {
-            $html_string .= "<p>Не найдены подходящие результаты для указанного запроса.</p>";
+            $html_string .= "<div class='bg-danger text-white p-3 rounded text-center'>Не найдены подходящие результаты для указанного запроса.</div>";
             $html_string .= "</div>";
         }
         return $html_string;

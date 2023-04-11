@@ -1,30 +1,26 @@
 <?php
 
-// Класс для нахождения слов-рифм к указанному слову
-class RhymeFinder
+// Класс для нахождения анаграмм для указанного слова
+class AnagramFinder
 {
     private DbConnect $_connect; // Подключение к БД
-    private string $_word; // Слово, к которому нужно найти рифму
-    private string $_end; // Окончание слова
+    private string $_word; // Слово, для которого нужно найти анаграммы
+    private array $_anagrams; // Анаграммы для указанного слова
 
     function __construct(DbConnect $connect, string $word)
     {
         $this->_connect = $connect;
         $this->_word = $word;
+        $this->_anagrams = array();
     }
 
     // Основной метод поиска
     public function find(): array
     {
-        $length = strlen($this->_word);
-        if ($length < 3) {
-            return [
-                "status" => false,
-                "message" => "Не удалось найти рифму к слову " . $this->_word
-            ];
-        }
-        if ($length == 3) $this->_end = mb_substr($this->_word, -2, null,'UTF-8');
-        else $this->_end = mb_substr($this->_word, -3, null,'UTF-8');
+        $word = mb_strtolower($this->_word, 'utf-8'); // Приводим слово к нижнему регистру
+        $letters = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY); // Разбиваем слово на буквы
+        sort($letters); // Сортируем буквы в алфавитном порядке
+        $this->generateAnagrams($letters, ""); // Вызываем рекурсивную функцию для генерации анаграмм
 
         $dictionaries = $this->getDictionaries();
         $query = $this->constructQuery($dictionaries);
@@ -34,6 +30,24 @@ class RhymeFinder
             "status" => true,
             "message" => $html
         ];
+    }
+
+    // Генерация анаграмм для указанного слова
+    private function generateAnagrams(array $letters, string $currentWord): void
+    {
+        if (count($letters) === 0) { // Базовый случай: если больше нет букв
+            $this->_anagrams[] = $currentWord; // Добавляем найденную анаграмму в результаты
+        } else {
+            for ($i = 0; $i < count($letters); $i++) {
+                if ($i > 0 && $letters[$i] === $letters[$i - 1]) {
+                    continue; // Пропускаем повторяющиеся буквы для оптимизации
+                }
+                $letter = $letters[$i];
+                $remainingLetters = $letters;
+                array_splice($remainingLetters, $i, 1); // Удаляем текущую букву из оставшихся
+                $this->generateAnagrams($remainingLetters, $currentWord . $letter); // Рекурсивно генерируем анаграммы
+            }
+        }
     }
 
     // Получение всех доступных словарей в системе
@@ -51,7 +65,7 @@ class RhymeFinder
         $query = "";
         $count = count($dictionaries);
         foreach ($dictionaries as $index => $dictionary) {
-            $query .= "SELECT `word` FROM " . "dictionary_" . $dictionary . " WHERE word LIKE '%$this->_end' AND word != '$this->_word'";
+            $query .= "SELECT `word` FROM " . "dictionary_" . $dictionary . " WHERE word IN ('" . implode("','", $this->_anagrams) . "') AND word != '$this->_word'";
             if ($index != $count - 1) $query .= " UNION ";
         }
         return $query;

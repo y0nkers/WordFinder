@@ -37,6 +37,9 @@
                         <li class="nav-item">
                             <a class="nav-link link-success" itemprop="url" href="/rhyme">Рифмы</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-success" itemprop="url" href="/anagram">Анаграммы</a>
+                        </li>
                     </ul>
                 </div>
             </nav>

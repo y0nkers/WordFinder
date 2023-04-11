@@ -47,7 +47,6 @@ require __DIR__ . '/header.php';
                 </div>
             </div>
         </div>
-    </div>
 
         <!-- Результаты поиска -->
         <div id="results-container" class="container d-none">
