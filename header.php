@@ -14,6 +14,14 @@
         <meta property="og:type" content="website">
 
         <link rel="stylesheet" href="/assets/css/style.css">
+        <?php
+        $file = basename($_SERVER['SCRIPT_FILENAME']);
+        if ($file == "wordle.php") {
+            echo '<link rel="stylesheet" href="/assets/css/wordle.css">';
+            echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>';
+            echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>';
+        }
+        ?>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     </head>
@@ -39,6 +47,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link link-success" itemprop="url" href="/anagram">Анаграммы</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-success" itemprop="url" href="/wordle">Wordle</a>
                         </li>
                     </ul>
                 </div>

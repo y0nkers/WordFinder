@@ -20,6 +20,10 @@ if ($file != "panel.php") echo '<script type="text/javascript" src="assets/js/he
 if ($file == "index.php" || basename($_SERVER['SCRIPT_FILENAME']) == "panel.php") echo '<script type="text/javascript" src="assets/js/main.js"></script>';
 if ($file == "rhyme.php") echo '<script type="text/javascript" src="assets/js/rhyme.js"></script>';
 if ($file == "anagram.php") echo '<script type="text/javascript" src="assets/js/anagram.js"></script>';
+if ($file == "wordle.php") {
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
+    echo '<script type="module" src="assets/js/wordle.js"></script>';
+}
 ?>
 
 </body>
