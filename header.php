@@ -18,7 +18,6 @@
         $file = basename($_SERVER['SCRIPT_FILENAME']);
         if ($file == "wordle.php") {
             echo '<link rel="stylesheet" href="/assets/css/wordle.css">';
-            echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>';
             echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>';
         }
         ?>

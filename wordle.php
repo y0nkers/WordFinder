@@ -7,6 +7,47 @@ require __DIR__ . '/header.php';
 <main class="container-fluid container-xl">
     <div class="pt-5 pb-3">
         <div class="game-container mt-5">
+            <!-- Toast победа -->
+            <div class="toast-container position-absolute p-3 top-50 start-50 translate-middle">
+                <div class="toast" id="toast-win" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header" style="background-color: #79b851">
+                        <h5 class="fw-bold text-center text-black">Победа! 🏆</h5>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <p class="fw-bold fs-5" id="message-win"></p>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" id="button-win" class="btn btn-dark btn-lg text-center mx-auto">Новая игра</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Toast поражение -->
+            <div class="toast-container position-absolute p-3 top-50 start-50 translate-middle">
+                <div class="toast" id="toast-lose" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header bg-danger">
+                        <h5 class="fw-bold text-center text-black">Поражение!</h5>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <p class="fw-bold fs-5" id="message-lose"></p>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" id="button-lose" class="btn btn-dark btn-lg text-center mx-auto">Новая игра</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Toast сообщение -->
+            <div class="toast-container position-absolute p-3 top-0 start-50 translate-middle-x">
+                <div class="toast align-items-center bg-warning" id="toast-info" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="1000">
+                    <div class="d-flex justify-content-center">
+                        <div class="toast-body">
+                            <p class="fw-bold fs-6 pb-0 mb-0" id="message-info"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="game-board"></div>
 
             <div id="keyboard">
