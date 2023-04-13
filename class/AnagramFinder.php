@@ -1,9 +1,9 @@
 <?php
+require_once "Finder.php";
 
 // Класс для нахождения анаграмм для указанного слова
-class AnagramFinder
+class AnagramFinder extends Finder
 {
-    private DbConnect $_connect; // Подключение к БД
     private string $_word; // Слово, для которого нужно найти анаграммы
     private array $_anagrams; // Анаграммы для указанного слова
 
@@ -51,7 +51,7 @@ class AnagramFinder
     }
 
     // Получение всех доступных словарей в системе
-    private function getDictionaries(): array
+    protected function getDictionaries(): array
     {
         $dictionaries = array();
         $stmt = $this->_connect->getPDO()->query("SELECT `id` FROM `dictionaries`");
@@ -60,7 +60,7 @@ class AnagramFinder
     }
 
     // Подготовка строки запроса
-    private function constructQuery(array $dictionaries): string
+    protected function constructQuery(array $dictionaries): string
     {
         $query = "";
         $count = count($dictionaries);
@@ -71,28 +71,4 @@ class AnagramFinder
         return $query;
     }
 
-    // Выполнение запроса и получение его результата
-    private function executeQuery(string $query): array
-    {
-        $stmt = $this->_connect->getPDO()->query($query);
-        $results = array();
-        $count = $stmt->rowCount();
-        if ($count > 0) while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
-        return $results;
-    }
-
-    // Создание html элемента с результатами запроса
-    private function constructHTML(array $results): string
-    {
-        $count = count($results);
-        $html = "<div class='container mt-3'><h2 class='text-center'>Результаты поиска:</h2>";
-        if ($count > 0) {
-            $html .= "<div class='bg-dark text-white p-3 rounded'>";
-            for ($i = 0; $i < $count; $i++) $html .= $results[$i]["word"] . " ";
-        } else {
-            $html .= "<div class='bg-danger text-white p-3 rounded text-center'>Не найдены подходящие результаты для указанного запроса.</div>";
-        }
-        $html .= "</div>";
-        return $html;
-    }
 }

@@ -1,10 +1,10 @@
 <?php
+require_once "Finder.php";
 require_once "Paginator.php";
 
 // Класс для нахождения слов по указанным параметрам
-class WordFinder
+class WordFinder extends Finder
 {
-    private DbConnect $_connect; // Подключение к БД
     private Paginator $_paginator; // Класс для пагинации результатов
     private string $_query; // Строка запроса
     private int $_page; // Текущая страница
@@ -46,10 +46,9 @@ class WordFinder
     }
 
     // Выполнение запроса и получение его результата
-    private function executeQuery(string $query): array
+    protected function executeQuery(string $query): array
     {
         $stmt = $this->_connect->getPDO()->query($query);
-
         $results = array();
         $count = $stmt->rowCount();
         if ($count > 0) while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
@@ -57,7 +56,7 @@ class WordFinder
     }
 
     // Создание html элемента с результатами запроса
-    private function constructHTML(array $results, int $total): string
+    protected function constructHTML(array $results, int $total = 0): string
     {
         $count = count($results);
         $html_string = "<div class='container mt-3'><h2 class='text-center'>Результаты поиска:</h2>";
@@ -73,4 +72,8 @@ class WordFinder
         }
         return $html_string;
     }
+
+    // Заглушки
+    protected function getDictionaries(): array { return []; }
+    protected function constructQuery(array $dictionaries): string { return ""; }
 }

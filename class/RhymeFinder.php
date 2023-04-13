@@ -1,9 +1,9 @@
 <?php
+require_once "Finder.php";
 
 // Класс для нахождения слов-рифм к указанному слову
-class RhymeFinder
+class RhymeFinder extends Finder
 {
-    private DbConnect $_connect; // Подключение к БД
     private string $_word; // Слово, к которому нужно найти рифму
     private string $_end; // Окончание слова
 
@@ -37,7 +37,7 @@ class RhymeFinder
     }
 
     // Получение всех доступных словарей в системе
-    private function getDictionaries(): array
+    protected function getDictionaries(): array
     {
         $dictionaries = array();
         $stmt = $this->_connect->getPDO()->query("SELECT `id` FROM `dictionaries`");
@@ -46,7 +46,7 @@ class RhymeFinder
     }
 
     // Подготовка строки запроса
-    private function constructQuery(array $dictionaries): string
+    protected function constructQuery(array $dictionaries): string
     {
         $query = "";
         $count = count($dictionaries);
@@ -55,30 +55,5 @@ class RhymeFinder
             if ($index != $count - 1) $query .= " UNION ";
         }
         return $query;
-    }
-
-    // Выполнение запроса и получение его результата
-    private function executeQuery(string $query): array
-    {
-        $stmt = $this->_connect->getPDO()->query($query);
-        $results = array();
-        $count = $stmt->rowCount();
-        if ($count > 0) while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
-        return $results;
-    }
-
-    // Создание html элемента с результатами запроса
-    private function constructHTML(array $results): string
-    {
-        $count = count($results);
-        $html = "<div class='container mt-3'><h2 class='text-center'>Результаты поиска:</h2>";
-        if ($count > 0) {
-            $html .= "<div class='bg-dark text-white p-3 rounded'>";
-            for ($i = 0; $i < $count; $i++) $html .= $results[$i]["word"] . " ";
-        } else {
-            $html .= "<div class='bg-danger text-white p-3 rounded text-center'>Не найдены подходящие результаты для указанного запроса.</div>";
-        }
-        $html .= "</div>";
-        return $html;
     }
 }
