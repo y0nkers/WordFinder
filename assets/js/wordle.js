@@ -34,8 +34,7 @@ $(document).ready(function () {
     // Нажатие на кнопку клавиатуры на сайте
     document.getElementById("keyboard").addEventListener("click", (e) => {
         const target = e.target;
-        if (!target.classList.contains("keyboard-button")) return;
-
+        if (target.dataset.key === undefined) return;
         let key = target.dataset.key;
         // Перенаправляем событие на keyup
         document.dispatchEvent(new KeyboardEvent("keyup", { key: key }));
