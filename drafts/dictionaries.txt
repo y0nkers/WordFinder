@@ -1,0 +1,26 @@
+Таблица dictionaries(список всех словарей):
+id - идентификатор таблицы (уникальный)
+name - название (вводит админ при создании) (уникальное)
+language - язык слов в таблице
+(добавить) count - количество слов в словаре (изменяется после добавления/удаления слов админом)
+
+Таблицы-словари dictionary_id:
+word - слово
+
+Пример:
+dictionaries
+id  name 	language
+1   Русский 	russian
+2   Английский 	english
+
+dictionary_1: русские слова
+dictionary_2: английские слова
+
+Возможность выбора нескольких словарей только ОДНОГО языка
+
+Создание словаря:
+1. Админ вводит имя + язык словаря
+2. Делаем запрос INSERT INTO `dictionaries`(`name`, `language`) VALUES ('name','language')
+3. Получаем id новой строки: $id = $db->lastInsertId();
+4. Делаем запрос CREATE TABLE `wordfinder`.`dictionary_id` ( `word` VARCHAR(32) NOT NULL , UNIQUE (`word`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
+5. Заносим слова из файла/поля в таблицу
