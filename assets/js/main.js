@@ -4,6 +4,12 @@ $(document).ready(function () {
     findDictionaries(language);
     loading.hide();
 
+    let guideModal = new bootstrap.Modal(document.getElementById("guideModal"));
+
+    $("#openGuide").click(function () {
+        guideModal.show();
+    });
+
     // Обработчик отправки данных формы на сервер
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
