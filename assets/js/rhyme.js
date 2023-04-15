@@ -3,6 +3,7 @@ $(document).ready(function () {
     $("#rhyme-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
+        let language = $("#select-language").val();
         let word = $("#word_rhyme").val();
 
         // Отправляем AJAX-запрос на сервер
@@ -12,7 +13,7 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: false,
             cache: false,
-            data: {word: word},
+            data: {language: language, word: word},
             success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {
@@ -28,6 +29,13 @@ $(document).ready(function () {
                 console.log('Error: ' + textStatus + ' - ' + errorThrown);
             }
         });
+    });
+
+    // Смена языка поиска
+    $("#select-language").change(function () {
+        language = $(this).find(':selected').val();
+        patternBase = languages[language].regexp;
+        $("#word_rhyme").val("");
     });
 
 });

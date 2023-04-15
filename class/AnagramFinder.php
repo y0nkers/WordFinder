@@ -4,12 +4,14 @@ require_once "Finder.php";
 // Класс для нахождения анаграмм для указанного слова
 class AnagramFinder extends Finder
 {
+    private string $_language; // Выбранный язык поиска
     private string $_word; // Слово, для которого нужно найти анаграммы
     private array $_anagrams; // Анаграммы для указанного слова
 
-    function __construct(DbConnect $connect, string $word)
+    function __construct(DbConnect $connect, string $language, string $word)
     {
         $this->_connect = $connect;
+        $this->_language = $language;
         $this->_word = $word;
         $this->_anagrams = array();
     }
@@ -54,7 +56,7 @@ class AnagramFinder extends Finder
     protected function getDictionaries(): array
     {
         $dictionaries = array();
-        $stmt = $this->_connect->getPDO()->query("SELECT `id` FROM `dictionaries`");
+        $stmt = $this->_connect->getPDO()->query("SELECT `id` FROM `dictionaries` WHERE `language` = '" . $this->_language . "'");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $dictionaries[] = $row["id"];
         return $dictionaries;
     }

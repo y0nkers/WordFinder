@@ -11,6 +11,21 @@ async function loadLanguages() {
 }
 
 $(document).ready(function () {
+    loadingMessage.text("Загрузка доступных языков...");
+    loadLanguages().then(_ => {
+        console.log("Languages loaded!");
+        let select = $("#select-language");
+        select.empty();
+        // Добавляем в select каждый язык из json файла
+        $.each(languages, function (key, value) {
+            select.append($("<option>", {
+                value: key,
+                text: value.name
+            }));
+        });
+        loading.hide();
+    });
+
     // bootstrap тултипы (подсказки к полям ввода)
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
@@ -54,6 +69,11 @@ $(document).ready(function () {
                     $(this).val(text.slice(0, -1));
                     return false;
                 }
+                pattern = makePattern(patternBase, "[^", "]", "i"); // /[^a-zA-Z]/i;
+                $(this).val(text.replace(pattern, ''));
+                break;
+            case "word_rhyme":
+            case "word_anagram":
                 pattern = makePattern(patternBase, "[^", "]", "i"); // /[^a-zA-Z]/i;
                 $(this).val(text.replace(pattern, ''));
                 break;

@@ -7,7 +7,7 @@ require __DIR__ . '/header.php';
 <main class="container-fluid container-xl">
     <div class="pt-5 pb-3">
         <!-- Загрузочный экран -->
-        <div id="loading" style="display: none;">
+        <div id="loading">
             <div class="container-fluid bg-light border border-dark rounded-3">
                 <div class="d-flex justify-content-center mt-4">
                     <div class="spinner-border text-primary" role="status">
@@ -43,10 +43,22 @@ require __DIR__ . '/header.php';
                     <div class="card border border-dark">
                         <div class="card-header bg-dark text-white">Решение анаграмм</div>
                         <div class="card-body rounded-3 field-bg">
-                            <form class="d-flex justify-content-start align-items-center flex-wrap flex-sm-nowrap" id="anagram-form">
-                                <label class="col-md-2 me-sm-2 mb-sm-0 form-label" for="word_anagram">Введите слово или заданные буквы</label>
-                                <input class="form-control me-sm-2 mb-2 mb-sm-0" type="text" id="word_anagram" name="word_anagram" placeholder="Слово/буквы" required>
-                                <button type="submit" class="btn btn-dark ms-auto">Найти</button>
+                            <form id="anagram-form">
+                                <div class="row align-items-center mb-3">
+                                    <div class="form-group col-md-4">
+                                        <label for="select-language">Язык поиска:</label>
+                                        <select class="form-select" name="select-language" id="select-language" aria-label="Select dictionary's language" required>
+                                            <option disabled selected>Пожалуйста, подождите</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label class="me-sm-2 mb-sm-0 form-label" for="word_anagram">Введите слово или анаграмму</label>
+                                        <div class="input-group">
+                                            <input class="form-control me-2" type="text" id="word_anagram" name="word_anagram" placeholder="Слово/анаграмма" required>
+                                            <button type="submit" class="rounded btn btn-dark">Найти</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

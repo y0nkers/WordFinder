@@ -1,22 +1,8 @@
 $(document).ready(function () {
-    loadingMessage.text("Загрузка доступных языков...");
-
-    loadLanguages().then(_ => {
-        console.log("Languages loaded!");
-        let select = $("#select-language");
-        select.empty();
-        // Добавляем в select каждый язык из json файла
-        $.each(languages, function (key, value) {
-            select.append($("<option>", {
-                value: key,
-                text: value.name
-            }));
-        });
-
-        loadingMessage.text("Загрузка доступных словарей...");
-        findDictionaries(language);
-        loading.hide();
-    });
+    loading.show();
+    loadingMessage.text("Загрузка доступных словарей...");
+    findDictionaries(language);
+    loading.hide();
 
     // Обработчик отправки данных формы на сервер
     $("#search-form").submit(function (event) {
@@ -160,10 +146,10 @@ $(document).ready(function () {
 
     // Смена языка поиска
     $("#select-language").change(function () {
-        loadingMessage.text("Загрузка доступных словарей...");
-        loading.show()
+        loading.show();
         language = $(this).find(':selected').val();
         patternBase = languages[language].regexp;
+        loadingMessage.text("Загрузка доступных словарей...");
         findDictionaries(language);
         clearSearchForm();
         loading.hide();

@@ -4,12 +4,14 @@ require_once "Finder.php";
 // Класс для нахождения слов-рифм к указанному слову
 class RhymeFinder extends Finder
 {
+    private string $_language; // Выбранный язык поиска
     private string $_word; // Слово, к которому нужно найти рифму
     private string $_end; // Окончание слова
 
-    function __construct(DbConnect $connect, string $word)
+    function __construct(DbConnect $connect, string $language, string $word)
     {
         $this->_connect = $connect;
+        $this->_language = $language;
         $this->_word = $word;
     }
 
@@ -40,7 +42,7 @@ class RhymeFinder extends Finder
     protected function getDictionaries(): array
     {
         $dictionaries = array();
-        $stmt = $this->_connect->getPDO()->query("SELECT `id` FROM `dictionaries`");
+        $stmt = $this->_connect->getPDO()->query("SELECT `id` FROM `dictionaries` WHERE `language` = '" . $this->_language . "'");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $dictionaries[] = $row["id"];
         return $dictionaries;
     }
