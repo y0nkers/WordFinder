@@ -18,11 +18,11 @@
         $file = basename($_SERVER['SCRIPT_FILENAME']);
         if ($file == "wordle.php") {
             echo '<link rel="stylesheet" href="/assets/css/wordle.css">';
-            echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>';
+            echo '<link rel="stylesheet" href="/assets/css/animate.min.css" />';
         }
         ?>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.min.css">
     </head>
     <body class="d-flex flex-column min-vh-100">
         <header class="navbar navbar-expand-lg navbar-dark bg-dark mb-3 fixed-top">
