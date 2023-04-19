@@ -35,6 +35,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <?php
+                        if ($file == 'dictionary.php') echo '<li class="nav-item"><a class="nav-link" itemprop="url" href="/admin/panel">Админ-панель</a></li>'
+                        ?>
                         <li class="nav-item">
                             <a class="nav-link link-success" itemprop="url" href="/">Поиск слов</a>
                         </li>

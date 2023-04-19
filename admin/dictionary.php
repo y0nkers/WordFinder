@@ -37,7 +37,7 @@ require '../header.php';
                 <p class="h4 mb-4 font-italic">Пожалуйста, подождите...</p>
             </div>
         </div>
-        <p>Информация о словаре "<?php echo $name;?>"</p>
+        <h3 class="text-center">Информация о словаре "<?php echo $name; ?>"</h3>
 
         <!-- Результаты поиска -->
         <div id="results-container" class="container mt-5 d-none">
