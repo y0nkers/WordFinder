@@ -30,6 +30,6 @@ nav .navbar-nav li a {
     background-color: rgba(236, 240, 241, 1);
 }
 
-.fa-trash, .fa-edit {
+.fa-solid {
     cursor: pointer;
 }

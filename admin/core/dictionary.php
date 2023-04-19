@@ -85,6 +85,19 @@ if ($type == 'add') {
     } catch (PDOException $e) {
         errorHandler("Ошибка при удалении словаря. Словарь с таким именем не найден.");
     }
+} else if ($type == 'edit') {
+    $oldName = $_POST['oldName'];
+    $newName = $_POST['newName'];
+
+    try {
+        $stmt = $pdo->prepare("UPDATE `dictionaries` SET `name` = :newName WHERE `name` = :oldName");
+        $stmt->bindParam(':newName', $newName);
+        $stmt->bindParam(':oldName', $oldName);
+        $stmt->execute();
+        if ($stmt->rowCount() == 0) errorHandler("Словарь с указанным названием не найден!");
+    } catch (PDOException $e) {
+        errorHandler("Ошибка при изменении названия словаря.");
+    }
 }
 
 $response = [

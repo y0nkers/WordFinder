@@ -197,6 +197,39 @@ $(document).ready(function () {
     })
 });
 
+function renameDictionary(dictionary) {
+    let newName = prompt("Введите новое название словаря", dictionary);
+    if (newName != null) {
+        let data = new FormData();
+        data.append('type', "edit");
+        data.append('oldName', dictionary);
+        data.append('newName', newName);
+
+        $.ajax({
+            url: 'core/dictionary.php',
+            type: 'POST',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: data,
+            success: function (response) {
+                // Выводим результаты запроса
+                if (response.status === false) {
+                    alert(response.message);
+                } else {
+                    alert("Название словаря изменено");
+                    window.location.reload();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText); // выводим ответ сервера
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
+    }
+}
+
 // Удаление словаря из системы
 function deleteDictionary(dictionary) {
     if (confirm('Удалить словарь "' + dictionary + '"?') === true) {

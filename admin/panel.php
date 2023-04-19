@@ -33,10 +33,10 @@ function print_dictionaries(array $data): void
     $table_data = "";
     for ($i = 0; $i < count($data); $i++) {
         $table_data .= "<tr>";
-        $table_data .= "<td>" . $data[$i]["name"] . "</td>";
+        $table_data .= "<td>" . $data[$i]["name"] . "<i class='fa-solid fa-pen ps-2' onclick='renameDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "<td class='dictionary-language text-center'>" . $data[$i]["language"] . "</td>";
         $table_data .= "<td class='text-center'>" . $data[$i]["count"] . " " . get_noun($data[$i]["count"], 'слово', 'слова', 'слов') . "</td>";
-        $table_data .= "<td><i class='fa-solid fa-edit'></i></td>";
+        $table_data .= "<td><i class='fa-solid fa-search'></i></td>";
         $table_data .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "</tr>";
     }
