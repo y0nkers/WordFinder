@@ -28,7 +28,8 @@ $links = (isset($_GET['links'])) ? $_GET['links'] : 4;
 $finder = new WordFinder($dbConnect, $query, $page, $limit, $links);
 // Добавляем сортировку к запросу, если соответствующие параметры установлены
 if (isset($_GET["sort_type"]) && isset($_GET["sort_order"]) && !empty($_GET["sort_order"])) $finder->sort($_GET["sort_type"], $_GET["sort_order"]);
-$response = $finder->find();
+$isAdmin = isset($_GET["admin"]) ? json_decode($_GET["admin"]) : false;
+$response = $finder->find($isAdmin);
 echo json_encode($response);
 
 // Закрываем соединение с базой данных

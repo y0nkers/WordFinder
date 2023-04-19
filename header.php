@@ -7,22 +7,22 @@
         <title><?php echo $title; ?></title>
         <link rel="icon" type="image/png" href="/assets/img/favicon.ico">
 
-        <meta name="description" content="Word Finder - сайт для поиска слов по маске и дополнительным параметрам.">
-        <meta property="og:description" content="Word Finder - сайт для поиска слов по маске и дополнительным параметрам.">
-        <meta property="og:title" content="Word Finder - Поиск слов">
-        <meta property="og:site_name" content="Word Finder - поиск слов">
+        <meta name="description" content="Word Finder - сайт для поиска слов по маске и дополнительным параметрам, рифмы и решения анаграмм.">
+        <meta property="og:description" content="Word Finder - сайт для поиска слов по маске и дополнительным параметрам, рифмы и решения анаграмм.">
+        <meta property="og:title" content="Word Finder - поиск слов, рифмы, решение анаграмм">
+        <meta property="og:site_name" content="Word Finder - поиск слов, рифмы, решение анаграмм">
         <meta property="og:type" content="website">
 
         <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
         <?php
         $file = basename($_SERVER['SCRIPT_FILENAME']);
         if ($file == "wordle.php") {
             echo '<link rel="stylesheet" href="/assets/css/wordle.css">';
             echo '<link rel="stylesheet" href="/assets/css/animate.min.css" />';
         }
+        if ($file == "index.php" || $file == "panel.php" || $file == "dictionary.php") echo '<link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.min.css">';
         ?>
-        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.min.css">
     </head>
     <body class="d-flex flex-column min-vh-100">
         <header class="navbar navbar-expand-lg navbar-dark bg-dark mb-3 fixed-top">

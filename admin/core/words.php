@@ -76,6 +76,20 @@ if ($type == 'add') {
     } catch (PDOException $e) {
         errorHandler("Ошибка при удалении слов. Проверьте введённые слова.");
     }
+} else if ($type == 'update') {
+    $oldWord = $_POST['oldWord'];
+    $newWord = $_POST['newWord'];
+
+    try {
+        $stmt = $pdo->prepare("UPDATE $dictionary SET `word` = :newWord WHERE `word` = :oldWord");
+        $stmt->bindParam(':newWord', $newWord);
+        $stmt->bindParam(':oldWord', $oldWord);
+        $stmt->execute();
+        if ($stmt->rowCount() == 0) errorHandler("Указанное слово не найдено.");
+    } catch (PDOException $e) {
+        //errorHandler("Ошибка при редактировании слова.");
+        errorHandler($e);
+    }
 }
 
 $response = [

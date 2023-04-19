@@ -85,7 +85,7 @@ if ($type == 'add') {
     } catch (PDOException $e) {
         errorHandler("Ошибка при удалении словаря. Словарь с таким именем не найден.");
     }
-} else if ($type == 'edit') {
+} else if ($type == 'update') {
     $oldName = $_POST['oldName'];
     $newName = $_POST['newName'];
 

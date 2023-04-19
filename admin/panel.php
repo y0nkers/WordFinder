@@ -33,10 +33,10 @@ function print_dictionaries(array $data): void
     $table_data = "";
     for ($i = 0; $i < count($data); $i++) {
         $table_data .= "<tr>";
-        $table_data .= "<td>" . $data[$i]["name"] . "<i class='fa-solid fa-pen ps-2' onclick='renameDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
+        $table_data .= "<td>" . $data[$i]["name"] . "<i class='fa-solid fa-pen ps-2' onclick='updateDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "<td class='dictionary-language text-center'>" . $data[$i]["language"] . "</td>";
         $table_data .= "<td class='text-center'>" . $data[$i]["count"] . " " . get_noun($data[$i]["count"], 'слово', 'слова', 'слов') . "</td>";
-        $table_data .= "<td><i class='fa-solid fa-search'></i></td>";
+        $table_data .= "<td><a href='dictionary?id=" . $data[$i]["id"] . "&name=" . $data[$i]["name"] . "'><i class='fa-solid fa-search'></i></a></td>";
         $table_data .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "</tr>";
     }
@@ -210,7 +210,7 @@ require '../header.php';
                                 <th class="col-2" style="width: 25%;">Язык</th>
                                 <th class="col-2" style="width: 25%;">Количество слов</th>
                                 <th class="col-1"></th>
-                                <th class="col-1 border-start-0"></th>
+                                <th class="col-1"></th>
                             </tr>
                         </thead>
                         <?php print_dictionaries($dictionaries); ?>

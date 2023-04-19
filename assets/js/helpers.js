@@ -31,19 +31,10 @@ $(document).ready(function () {
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
     // Добавляем загрузочный экран при отправке запроса
-    $(document).ajaxSend(function () {
-        loading.show();
-        loadingMessage.text("Выполнение запроса...");
-        $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
-        $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
-    });
+    $(document).ajaxSend(showLoadingScreen);
 
     // Убираем загрузочный экран при завершении запроса
-    $(document).ajaxComplete(function () {
-        loading.hide();
-        $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
-        $('.overlay').remove(); // Убираем затемнение
-    });
+    $(document).ajaxComplete(hideLoadingScreen);
 
     // Обработчик ввода в поле параметров
     $('input[type="text"]').on('input', function () {
@@ -82,6 +73,19 @@ $(document).ready(function () {
         }
     });
 });
+
+function showLoadingScreen() {
+    loading.show();
+    loadingMessage.text("Выполнение операции...");
+    $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
+    $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
+}
+
+function hideLoadingScreen() {
+    loading.hide();
+    $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
+    $('.overlay').remove(); // Убираем затемнение
+}
 
 // Проверка введённых в поле данных на корректность.
 // pattern - шаблон, которому должны соответствовать данные

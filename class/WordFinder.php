@@ -30,14 +30,15 @@ class WordFinder extends Finder
     }
 
     // Основной метод поиска
-    public function find(): array
+    public function find(bool $admin = false): array
     {
         $total = $this->_connect->getPDO()->query($this->_query)->rowCount();
         $this->_paginator = new Paginator($this->_page, $this->_limit, $this->_links, $total);
         // Ограничиваем результат запроса в зависимости от текущей страницы и лимита слов на странице
         $query = $this->_query . " LIMIT " . (($this->_page - 1) * $this->_limit) . ", $this->_limit";
         $results = $this->executeQuery($query);
-        $html = $this->constructHTML($results, $total);
+        if ($admin) $html = $this->adminHTML($results, $total);
+        else $html = $this->constructHTML($results, $total);
         return [
             "status" => true,
             "message" => $html,
@@ -64,6 +65,28 @@ class WordFinder extends Finder
             $html_string .= "<table class='table table-bordered table-hover table-striped table-secondary border border-dark'>";
             $html_string .= "<tbody>";
             for ($i = 0; $i < $count; $i++) $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ". " . $results[$i]["word"] . "</td></tr>";
+            $html_string .= "</tbody></table></div>";
+            $html_string .= $this->_paginator->createLinks();
+        } else {
+            $html_string .= "<div class='bg-danger text-white p-3 rounded text-center'>Не найдены подходящие результаты для указанного запроса.</div>";
+            $html_string .= "</div>";
+        }
+        return $html_string;
+    }
+
+    private function adminHTML(array $results, int $total): string
+    {
+        $count = count($results);
+        $html_string = "<div class='container mt-3'>";
+        if ($total > 0) {
+            $html_string .= "<table class='table table-bordered table-hover table-striped table-secondary border border-dark'>";
+            $html_string .= "<thead><tr><th class='col-12'></th><th></th><th></th></tr></thead><tbody>";
+            for ($i = 0; $i < $count; $i++)
+            {
+                $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ". " . $results[$i]["word"] . "</td>";
+                $html_string .= "<td><i class='fa-solid fa-pen' onclick='updateWord(\"" . $results[$i]["word"] . "\")'></i></td>";
+                $html_string .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteWord(\"" . $results[$i]["word"] . "\")'></i></td></tr>";
+            }
             $html_string .= "</tbody></table></div>";
             $html_string .= $this->_paginator->createLinks();
         } else {

@@ -197,11 +197,12 @@ $(document).ready(function () {
     })
 });
 
-function renameDictionary(dictionary) {
+// Изменение названия словаря
+function updateDictionary(dictionary) {
     let newName = prompt("Введите новое название словаря", dictionary);
     if (newName != null) {
         let data = new FormData();
-        data.append('type', "edit");
+        data.append('type', "update");
         data.append('oldName', dictionary);
         data.append('newName', newName);
 

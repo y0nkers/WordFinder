@@ -16,8 +16,9 @@
 $file = basename($_SERVER['SCRIPT_FILENAME']);
 
 // Подключаем js в зависимости от страницы
-if ($file != "panel.php" && $file != "wordle.php") echo '<script type="text/javascript" src="assets/js/helpers.js"></script>';
-if ($file == "index.php" || basename($_SERVER['SCRIPT_FILENAME']) == "panel.php") echo '<script type="text/javascript" src="assets/js/main.js"></script>';
+if ($file != "panel.php" && $file != "wordle.php") echo '<script type="text/javascript" src="/assets/js/helpers.js"></script>';
+if ($file == "dictionary.php") echo '<script type="text/javascript" src="assets/js/dictionary.js"></script>';
+if ($file == "index.php" || $file == "panel.php") echo '<script type="text/javascript" src="assets/js/main.js"></script>';
 if ($file == "rhyme.php") echo '<script type="text/javascript" src="assets/js/rhyme.js"></script>';
 if ($file == "anagram.php") echo '<script type="text/javascript" src="assets/js/anagram.js"></script>';
 if ($file == "wordle.php") echo '<script type="module" src="assets/js/wordle.js"></script>';
