@@ -36,6 +36,8 @@ function print_dictionaries(array $data): void
         $table_data .= "<td>" . $data[$i]["name"] . "</td>";
         $table_data .= "<td class='dictionary-language text-center'>" . $data[$i]["language"] . "</td>";
         $table_data .= "<td class='text-center'>" . $data[$i]["count"] . " " . get_noun($data[$i]["count"], 'слово', 'слова', 'слов') . "</td>";
+        $table_data .= "<td><i class='fa-solid fa-edit'></i></td>";
+        $table_data .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "</tr>";
     }
     echo $table_data;
@@ -113,29 +115,6 @@ require '../header.php';
                             <div class="modal-footer pb-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                                 <button type="submit" class="btn btn-primary">Добавить</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Удалить словарь -->
-        <div class="modal fade" id="deleteDictionaryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteDictionaryModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteDictionaryModalLabel">Удалить словарь</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="deleteDictionaryForm">
-                            <div class="form-group mb-3">
-                                <label for="deleteDictionaryName">Название словаря:</label>
-                                <input type="text" class="form-control" id="deleteDictionaryName" name="deleteDictionaryName" placeholder="Введите название словаря для удаления" required>
-                            </div>
-                            <div class="modal-footer pb-0">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                                <button type="submit" class="btn btn-primary">Удалить</button>
                             </div>
                         </form>
                     </div>
@@ -230,6 +209,8 @@ require '../header.php';
                                 <th class="col-6" style="width: 50%;">Название</th>
                                 <th class="col-2" style="width: 25%;">Язык</th>
                                 <th class="col-2" style="width: 25%;">Количество слов</th>
+                                <th class="col-1"></th>
+                                <th class="col-1 border-start-0"></th>
                             </tr>
                         </thead>
                         <?php print_dictionaries($dictionaries); ?>
@@ -242,7 +223,6 @@ require '../header.php';
                     <!-- Кнопки вызова диалоговых окон -->
                     <div class="d-flex align-items-center justify-content-evenly gap-2">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteDictionaryModal">Удалить словарь</button>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWordsModal">Добавить слова</button>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteWordsModal">Удалить слова</button>
                     </div>

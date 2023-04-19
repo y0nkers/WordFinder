@@ -29,3 +29,7 @@ nav .navbar-nav li a {
 .field-bg {
     background-color: rgba(236, 240, 241, 1);
 }
+
+.fa-trash, .fa-edit {
+    cursor: pointer;
+}

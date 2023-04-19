@@ -1,4 +1,6 @@
 let languages = null;
+let loading;
+let loadingMessage;
 
 async function loadLanguages() {
     const response = await fetch('/languages.json');
@@ -10,8 +12,8 @@ $(document).ready(function () {
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
     // Элемент "загрузочный экран"
-    let loading = $("#loading");
-    let loadingMessage = $("#loading-message");
+    loading = $("#loading");
+    loadingMessage = $("#loading-message");
     loadingMessage.text("Загрузка доступных языков...");
 
     loadLanguages().then(_ => {
@@ -40,19 +42,6 @@ $(document).ready(function () {
             $(this).text(languages[$(this).text()].name);
         });
     });
-
-    function showLoadingScreen() {
-        loading.show();
-        loadingMessage.text("Выполнение операции...");
-        $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
-        $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
-    }
-
-    function hideLoadingScreen() {
-        loading.hide();
-        $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
-        $('.overlay').remove(); // Убираем затемнение
-    }
 
     // Добавляем загрузочный экран при отправке запроса
     $(document).ajaxSend(showLoadingScreen);
@@ -90,39 +79,6 @@ $(document).ready(function () {
                     alert(response.message);
                 } else {
                     alert("Словарь добавлен. Количество слов: " + response.count);
-                    window.location.reload();
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.responseText); // выводим ответ сервера
-                console.log('Error: ' + textStatus + ' - ' + errorThrown);
-            }
-        });
-    })
-
-    $("#deleteDictionaryForm").submit(function (event) {
-        event.preventDefault(); // Отменяем стандартное поведение формы
-
-        let name = $("#deleteDictionaryName").val();
-
-        let data = new FormData();
-        data.append('type', "delete");
-        data.append('name', name);
-
-        $.ajax({
-            url: 'core/dictionary.php',
-            type: 'POST',
-            dataType: 'json',
-            contentType: false,
-            processData: false,
-            cache: false,
-            data: data,
-            success: function (response) {
-                // Выводим результаты запроса
-                if (response.status === false) {
-                    alert(response.message);
-                } else {
-                    alert("Словарь удалён");
                     window.location.reload();
                 }
             },
@@ -240,6 +196,51 @@ $(document).ready(function () {
         });
     })
 });
+
+// Удаление словаря из системы
+function deleteDictionary(dictionary) {
+    if (confirm('Удалить словарь "' + dictionary + '"?') === true) {
+        let data = new FormData();
+        data.append('type', "delete");
+        data.append('name', dictionary);
+
+        $.ajax({
+            url: 'core/dictionary.php',
+            type: 'POST',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: data,
+            success: function (response) {
+                // Выводим результаты запроса
+                if (response.status === false) {
+                    alert(response.message);
+                } else {
+                    alert("Словарь удалён");
+                    window.location.reload();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText); // выводим ответ сервера
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
+    }
+}
+
+function showLoadingScreen() {
+    loading.show();
+    loadingMessage.text("Выполнение операции...");
+    $('body').css('overflow', 'hidden'); // Запрещаем скроллинг страницы
+    $('<div class="overlay"></div>').appendTo('body'); // Добавляем затемнение
+}
+
+function hideLoadingScreen() {
+    loading.hide();
+    $('body').css('overflow', 'auto'); // Разрешаем скроллинг страницы
+    $('.overlay').remove(); // Убираем затемнение
+}
 
 function validateFileType() {
     let fileName = this.value;
