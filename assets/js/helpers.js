@@ -8,9 +8,14 @@ let loadingMessage = $("#loading-message"); // Сообщение в загру�
 async function loadLanguages() {
     const response = await fetch('/languages.json');
     languages = await response.json();
+    return languages;
 }
 
 $(document).ready(function () {
+    // bootstrap тултипы (подсказки к полям ввода)
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
     loadingMessage.text("Загрузка доступных языков...");
     loadLanguages().then(_ => {
         console.log("Languages loaded!");
@@ -25,10 +30,6 @@ $(document).ready(function () {
         });
         loading.hide();
     });
-
-    // bootstrap тултипы (подсказки к полям ввода)
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
     // Добавляем загрузочный экран при отправке запроса
     $(document).ajaxSend(showLoadingScreen);

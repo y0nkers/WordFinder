@@ -36,7 +36,7 @@ function print_dictionaries(array $data): void
         $table_data .= "<td>" . $data[$i]["name"] . "<i class='fa-solid fa-pen ps-2' onclick='updateDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "<td class='dictionary-language text-center'>" . $data[$i]["language"] . "</td>";
         $table_data .= "<td class='text-center'>" . $data[$i]["count"] . " " . get_noun($data[$i]["count"], 'слово', 'слова', 'слов') . "</td>";
-        $table_data .= "<td><a href='dictionary?id=" . $data[$i]["id"] . "&name=" . $data[$i]["name"] . "'><i class='fa-solid fa-search'></i></a></td>";
+        $table_data .= "<td><a href='dictionary?id=" . $data[$i]["id"] . "&name=" . $data[$i]["name"] . "&language=" . $data[$i]["language"] . "'><i class='fa-solid fa-search'></i></a></td>";
         $table_data .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "</tr>";
     }
@@ -215,17 +215,7 @@ require '../header.php';
                         </thead>
                         <?php print_dictionaries($dictionaries); ?>
                     </table>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <h3 class="text-center">Доступные действия</h3>
-                    <!-- Кнопки вызова диалоговых окон -->
-                    <div class="d-flex align-items-center justify-content-evenly gap-2">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWordsModal">Добавить слова</button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteWordsModal">Удалить слова</button>
-                    </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDictionaryModal">Добавить словарь</button>
                 </div>
             </div>
         </div>

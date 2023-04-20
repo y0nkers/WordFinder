@@ -81,7 +81,7 @@ class WordFinder extends Finder
     private function adminHTML(array $results, int $total): string
     {
         $count = count($results);
-        $html_string = "<div class='container mt-3'>";
+        $html_string = "<div class='container mt-3 px-0'>";
         if ($total > 0) {
             $html_string .= "<table class='table table-bordered table-hover table-striped table-secondary border border-dark'>";
             $html_string .= "<thead><tr><th></th><th class='col-12'></th><th></th><th></th></tr></thead><tbody>";
