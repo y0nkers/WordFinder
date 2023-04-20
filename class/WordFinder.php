@@ -63,8 +63,12 @@ class WordFinder extends Finder
         $html_string = "<div class='container mt-3'><h2 class='text-center'>Результаты поиска:</h2>";
         if ($total > 0) {
             $html_string .= "<table class='table table-bordered table-hover table-striped table-secondary border border-dark'>";
-            $html_string .= "<tbody>";
-            for ($i = 0; $i < $count; $i++) $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ". " . $results[$i]["word"] . "</td></tr>";
+            $html_string .= "<thead><tr><th></th><th class='col-12'></th></tr></thead><tbody>";
+            for ($i = 0; $i < $count; $i++)
+            {
+                $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ".</td>";
+                $html_string .= "<td>" . $results[$i]["word"] . "</td></tr>";
+            }
             $html_string .= "</tbody></table></div>";
             $html_string .= $this->_paginator->createLinks();
         } else {
@@ -80,10 +84,11 @@ class WordFinder extends Finder
         $html_string = "<div class='container mt-3'>";
         if ($total > 0) {
             $html_string .= "<table class='table table-bordered table-hover table-striped table-secondary border border-dark'>";
-            $html_string .= "<thead><tr><th class='col-12'></th><th></th><th></th></tr></thead><tbody>";
+            $html_string .= "<thead><tr><th></th><th class='col-12'></th><th></th><th></th></tr></thead><tbody>";
             for ($i = 0; $i < $count; $i++)
             {
-                $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ". " . $results[$i]["word"] . "</td>";
+                $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ".</td>";
+                $html_string .= "<td>" . $results[$i]["word"] . "</td>";
                 $html_string .= "<td><i class='fa-solid fa-pen' onclick='updateWord(\"" . $results[$i]["word"] . "\")'></i></td>";
                 $html_string .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteWord(\"" . $results[$i]["word"] . "\")'></i></td></tr>";
             }

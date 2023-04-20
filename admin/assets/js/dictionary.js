@@ -114,6 +114,7 @@ $(document).ready(function () {
 function updateWord(word) {
     let newWord = prompt("Введите изменённое слово", word);
     if (newWord != null) {
+        let row = $(event.target).closest('tr');
         let data = new FormData();
         data.append('type', "update");
         data.append('id', id);
@@ -134,7 +135,8 @@ function updateWord(word) {
                     alert(response.message);
                 } else {
                     alert("Слово отредактировано");
-                    window.location.reload();
+                    row.find('td:nth-child(2)').text(newWord);
+                    row.find('td:nth-child(3) i').attr('onclick', 'updateWord("' + newWord + '")');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -148,6 +150,7 @@ function updateWord(word) {
 // Удаление слова
 function deleteWord(word) {
     if (confirm('Удалить слово "' + word + '"?') === true) {
+        let row = $(event.target).closest('tr');
         let data = new FormData();
         data.append('type', "delete");
         data.append('id', id);
@@ -166,8 +169,8 @@ function deleteWord(word) {
                 if (response.status === false) {
                     alert(response.message);
                 } else {
+                    row.remove();
                     alert("Слово удалено");
-                    window.location.reload();
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {

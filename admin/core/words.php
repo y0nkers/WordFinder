@@ -87,8 +87,7 @@ if ($type == 'add') {
         $stmt->execute();
         if ($stmt->rowCount() == 0) errorHandler("Указанное слово не найдено.");
     } catch (PDOException $e) {
-        //errorHandler("Ошибка при редактировании слова.");
-        errorHandler($e);
+        errorHandler("Ошибка при редактировании слова. Возможно, такое слово уже имеется в словаре.");
     }
 }
 
