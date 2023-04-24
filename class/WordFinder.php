@@ -21,23 +21,23 @@ class WordFinder extends Finder
     }
 
     // Добавление в запрос сортировкир результатом
-    public function sort(string $sort_type, string $sort_order): void
+    public function sort(string $sortType, string $sortOrder): void
     {
-        if ($sort_type == "sort-word") $this->_query .= " ORDER BY word ";
-        else if ($sort_type == "sort-length") $this->_query .= " ORDER BY CHAR_LENGTH(word) ";
-        if ($sort_order == "sortASC") $this->_query .= "ASC";
-        else if ($sort_order == "sortDESC") $this->_query .= "DESC";
+        if ($sortType == "sort-word") $this->_query .= " ORDER BY word ";
+        else if ($sortType == "sort-length") $this->_query .= " ORDER BY CHAR_LENGTH(word) ";
+        if ($sortOrder == "sortASC") $this->_query .= "ASC";
+        else if ($sortOrder == "sortDESC") $this->_query .= "DESC";
     }
 
     // Основной метод поиска
-    public function find(bool $admin = false): array
+    public function find(bool $isAdmin = false): array
     {
         $total = $this->_connect->getPDO()->query($this->_query)->rowCount();
         $this->_paginator = new Paginator($this->_page, $this->_limit, $this->_links, $total);
         // Ограничиваем результат запроса в зависимости от текущей страницы и лимита слов на странице
         $query = $this->_query . " LIMIT " . (($this->_page - 1) * $this->_limit) . ", $this->_limit";
         $results = $this->executeQuery($query);
-        if ($admin) $html = $this->adminHTML($results, $total);
+        if ($isAdmin) $html = $this->adminHTML($results, $total);
         else $html = $this->constructHTML($results, $total);
         return [
             "status" => true,
