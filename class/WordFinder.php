@@ -89,8 +89,8 @@ class WordFinder extends Finder
             {
                 $html_string .= "<tr><td>" . (($this->_page - 1) * $this->_limit + $i + 1) . ".</td>";
                 $html_string .= "<td>" . $results[$i]["word"] . "</td>";
-                $html_string .= "<td><i class='fa-solid fa-pen' onclick='updateWord(\"" . $results[$i]["word"] . "\")'></i></td>";
-                $html_string .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteWord(\"" . $results[$i]["word"] . "\")'></i></td></tr>";
+                $html_string .= "<td><i class='fa-solid fa-pen' onclick='updateWord(\"" . $results[$i]["word"] . "\")' title='Редактировать'></i></td>";
+                $html_string .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteWord(\"" . $results[$i]["word"] . "\")' title='Удалить'></i></td></tr>";
             }
             $html_string .= "</tbody></table></div>";
             $html_string .= $this->_paginator->createLinks();

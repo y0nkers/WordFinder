@@ -36,8 +36,8 @@ function print_dictionaries(array $data): void
         $table_data .= "<td>" . $data[$i]["name"] . "<i class='fa-solid fa-pen ps-2' onclick='updateDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
         $table_data .= "<td class='dictionary-language text-center'>" . $data[$i]["language"] . "</td>";
         $table_data .= "<td class='text-center'>" . $data[$i]["count"] . " " . get_noun($data[$i]["count"], 'слово', 'слова', 'слов') . "</td>";
-        $table_data .= "<td><a href='dictionary?id=" . $data[$i]["id"] . "&name=" . $data[$i]["name"] . "&language=" . $data[$i]["language"] . "'><i class='fa-solid fa-search'></i></a></td>";
-        $table_data .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteDictionary(\"" . $data[$i]["name"] . "\")'></i></td>";
+        $table_data .= "<td><a href='dictionary?id=" . $data[$i]["id"] . "&name=" . $data[$i]["name"] . "&language=" . $data[$i]["language"] . "' title='Редактировать'><i class='fa-solid fa-search'></i></a></td>";
+        $table_data .= "<td><i class='fa-solid fa-trash' style='color: red' onclick='deleteDictionary(\"" . $data[$i]["name"] . "\")' title='Удалить'></i></td>";
         $table_data .= "</tr>";
     }
     echo $table_data;
