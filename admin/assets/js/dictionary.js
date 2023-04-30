@@ -186,6 +186,12 @@ $(document).ready(function () {
         });
     });
 
+    $("#addWordsTextarea, #deleteWordsInput").on('input', function (event) {
+        let text = $(this).val().toUpperCase();
+        let pattern = makePattern(patternBase, "[^", "\n]", "i"); // /[^a-zA-Z\n]/i;
+        $(this).val(text.replace(pattern, ''));
+    });
+
     $("#resetForm").click(function () {
         clearSearchForm();
     });
@@ -306,7 +312,6 @@ function updateWord(word) {
                 if (response.status === false) {
                     alert(response.message);
                 } else {
-                    alert("Слово отредактировано");
                     row.find('td:nth-child(2)').text(newWord);
                     row.find('td:nth-child(3) i').attr('onclick', 'updateWord("' + newWord + '")');
                 }
@@ -342,7 +347,6 @@ function deleteWord(word) {
                     alert(response.message);
                 } else {
                     row.remove();
-                    alert("Слово удалено");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
