@@ -41,21 +41,34 @@ require __DIR__ . '/header.php';
                 <div class="col-md-8">
                     <!-- Форма поиска -->
                     <div class="card border border-dark">
-                        <div class="card-header bg-dark text-white">Решение анаграмм</div>
+                        <div class="card-header bg-dark text-white">Решение и составление анаграмм</div>
                         <div class="card-body rounded-3 field-bg">
                             <form id="anagram-form">
                                 <div class="row align-items-center mb-3">
-                                    <div class="form-group col-md-4">
-                                        <label for="select-language">Язык поиска:</label>
+                                    <div class="form-group col-sm-6">
+                                        <label>Выберите действие:</label><br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="action" id="action-solve" value="solve" checked>
+                                            <label class="form-check-label" for="action-solve">Решить анаграмму</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="action" id="action-make" value="make">
+                                            <label class="form-check-label" for="action-make">Составить анаграмму</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="select-language">Язык поиска: </label>
                                         <select class="form-select" name="select-language" id="select-language" aria-label="Select dictionary's language" required>
                                             <option disabled selected>Пожалуйста, подождите</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-8">
+                                </div>
+                                <div class="row align-items-center mb-3">
+                                    <div class="form-group">
                                         <label class="me-sm-2 mb-sm-0 form-label" for="word_anagram">Введите слово или анаграмму</label>
                                         <div class="input-group">
                                             <input class="form-control me-2" type="text" id="word_anagram" name="word_anagram" placeholder="Слово/анаграмма" required>
-                                            <button type="submit" class="rounded btn btn-dark">Найти</button>
+                                            <button type="submit" id="anagram-btn" class="rounded btn btn-dark">Решить</button>
                                         </div>
                                     </div>
                                 </div>
