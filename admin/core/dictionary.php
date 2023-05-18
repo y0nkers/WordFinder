@@ -96,7 +96,7 @@ if ($type == 'add') {
         $stmt->execute();
         if ($stmt->rowCount() == 0) errorHandler("Словарь с указанным названием не найден!");
     } catch (PDOException $e) {
-        errorHandler("Ошибка при изменении названия словаря.");
+        errorHandler("Ошибка при изменении названия словаря. Словарь с таким названием уже существует.");
     }
 }
 

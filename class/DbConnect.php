@@ -16,7 +16,7 @@ class DbConnect
             $this->_connection->exec("set names utf8mb4");
             $this->_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $error) {
-            die("Ошибка подключения к базе данных: " . $error->getMessage());
+            die("Ошибка подключения к базе данных. Сообщите администратору сайта об этой ошибке: " . $error->getMessage());
         }
     }
 

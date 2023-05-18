@@ -113,6 +113,11 @@ require __DIR__ . '/header.php';
                                             <input class="form-check-input" type="radio" name="mode" id="mode-extended" value="extended">
                                             <label class="form-check-label" for="mode-extended">Расширенный</label>
                                         </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="mode" id="mode-regexp" value="regexp">
+                                            <label class="form-check-label" for="mode-regexp">RegExp</label>
+                                            <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Поиск для продвинутых пользователей на основе регулярных выражений"><i class="fas fa-question-circle"></i></span>
+                                        </div>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="select-language">Язык поиска: </label>
@@ -134,6 +139,13 @@ require __DIR__ . '/header.php';
                                         <label for="mask">Маска слова:</label>
                                         <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="? - любая буква; * - любые несколько букв. Пример: А???? - слова из 5 букв на А."><i class="fas fa-question-circle"></i></span>
                                         <input type="text" class="form-control" id="mask" name="mask" placeholder="Введите маску" maxlength="32" required>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-3" id="regexp-mode-parameters">
+                                    <div class="form-group">
+                                        <label for="regexp">Регулярное выражение:</label>
+                                        <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="? - любая буква; * - любые несколько букв. Пример: А???? - слова из 5 букв на А."><i class="fas fa-question-circle"></i></span>
+                                        <input type="text" class="form-control" id="regexp" name="regexp" placeholder="Введите регулярное выражение" required>
                                     </div>
                                 </div>
                                 <div class="row align-items-center mb-3" id="extended-mode-parameters-1">

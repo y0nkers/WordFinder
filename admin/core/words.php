@@ -5,6 +5,7 @@ require_once "../../class/DbConnect.php";
 
 $type = $_POST['type'];
 $id = $_POST['id'];
+$language = $_POST['language'];
 $dictionary = "dictionary_" . $id;
 $count = 0;
 
@@ -34,6 +35,10 @@ if ($type == 'add') {
     } else if ($mode == 'addFromText') { // Добавление из поля ввода
         $words = $_POST['words'];
         $words = explode(',', $words);
+        $base = getPatternBase($language, "/../../languages.json");
+        $pattern = makePattern($base, "^[", "]+$", "i");
+        // Проверка введённых слов на соответствие шаблону
+        foreach ($words as $word) validateWord($word, $pattern);
 
         $values = implode(',', array_map(function ($word) {
             return "('" . $word . "')";
@@ -111,4 +116,31 @@ function errorHandler(string $message): void
 
     echo json_encode($response);
     die();
+}
+
+// Проверка слова на корректность введённых данных
+function validateWord(string $word, string $pattern): void
+{
+    if (!empty($word) && !preg_match($pattern, $word)) {
+        $error = [
+            "status" => false,
+            "message" => "Проверьте правильность введённых слов."
+        ];
+        echo json_encode($error);
+        die();
+    }
+}
+
+// Получение из json шаблона для текущего языка поиска
+function getPatternBase($language, string $path): string
+{
+    $json = file_get_contents(__DIR__ . $path);
+    $data = json_decode($json, true);
+    return $data[$language]["regexp"];
+}
+
+// Полный шаблон regexp с флагами
+function makePattern(string $base, string $prefix, string $postfix, string $flags): string
+{
+    return '/' . $prefix . $base . $postfix . '/' . $flags;
 }

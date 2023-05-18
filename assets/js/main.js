@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         // Получаем введённые данные с полей
         let mode = $("input[name='mode']:checked").val();
-        if (!(mode === "normal" || mode === "extended")) {
+        if (!(mode === "normal" || mode === "extended" || mode === "regexp")) {
             alert("Выберите режим поиска слов!");
             return;
         }
@@ -198,6 +198,7 @@ function findDictionaries(language) {
 // Очистка всех полей формы после смены языка
 function clearSearchForm() {
     $("#mask").val("");
+    $("#regexp").val("");
     $("#length").val("");
     $("#start").val("");
     $("#end").val("");
@@ -211,22 +212,37 @@ function checkForMode(obj) {
     let mode = obj.value;
     if (mode === 'normal') {
         $("#mask").prop('disabled', false);
+        $("#regexp").prop('disabled', true);
         $("#start").prop('disabled', true);
         $("#end").prop('disabled', true);
 
         $("#normal-mode-parameters").show();
+        $("#regexp-mode-parameters").hide();
         $("#extended-mode-parameters-1").hide();
         $("#extended-mode-parameters-2").hide();
         $("#extended-mode-parameters-3").hide();
     } else if (mode === 'extended') {
         $("#mask").prop('disabled', true);
+        $("#regexp").prop('disabled', true);
         $("#start").prop('disabled', false);
         $("#end").prop('disabled', false);
 
         $("#normal-mode-parameters").hide();
+        $("#regexp-mode-parameters").hide();
         $("#extended-mode-parameters-1").show();
         $("#extended-mode-parameters-2").show();
         $("#extended-mode-parameters-3").show();
+    } else if (mode === 'regexp') {
+        $("#mask").prop('disabled', true);
+        $("#regexp").prop('disabled', false);
+        $("#start").prop('disabled', true);
+        $("#end").prop('disabled', true);
+
+        $("#normal-mode-parameters").hide();
+        $("#regexp-mode-parameters").show();
+        $("#extended-mode-parameters-1").hide();
+        $("#extended-mode-parameters-2").hide();
+        $("#extended-mode-parameters-3").hide();
     }
 }
 
@@ -273,6 +289,10 @@ function validateData(mode) {
             return;
         }
         data = [length, start, end, contains, include, exclude];
+    } else if (mode === 'regexp') {
+        let regexp = $("#regexp").val();
+
+        data = [regexp];
     }
     return data;
 }

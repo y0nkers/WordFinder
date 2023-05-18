@@ -84,6 +84,7 @@ $(document).ready(function () {
         let data = new FormData();
         data.append('type', "add");
         data.append('id', id);
+        data.append('language', language);
         data.append('mode', mode);
         data.append('words', words);
 

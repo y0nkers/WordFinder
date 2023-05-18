@@ -94,6 +94,11 @@ class QueryConstructor
             }
             if (!$this->_compound_words) $exclude .= '-';
             if (!empty($exclude)) $query .= " AND word NOT REGEXP '[$exclude]'";
+        } else if ($this->_mode == "regexp") {
+            $regexp = $this->_data[0];
+            $pattern = '/^[' . $base . '\[\]\-.*+?^${}()|\\\d]' . '/i'; // base + regexp meta symbols + digits
+            $this->validateField("Регулярное выражение", $regexp, $pattern);
+            $query .= " word REGEXP '$regexp'";
         }
         return $query;
     }

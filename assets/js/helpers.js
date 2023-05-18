@@ -47,6 +47,10 @@ $(document).ready(function () {
                 pattern = makePattern(patternBase, "[^", "?*]", "i"); // /[^a-zA-Z?*]/i;
                 $(this).val(text.replace(pattern, ''));
                 break;
+            case "regexp":
+                pattern = new RegExp('[^' + patternBase + '\\[\\]\\-.*+?^${}()|\\\\\\d]', 'i'); // patternBase + regexp meta symbols + digits
+                $(this).val(text.replace(pattern, ''));
+                break;
             case "start":
             case "end":
             case "contains":
