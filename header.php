@@ -21,7 +21,7 @@
             echo '<link rel="stylesheet" href="/assets/css/wordle.css">';
             echo '<link rel="stylesheet" href="/assets/css/animate.min.css" />';
         }
-        if ($file == "index.php" || $file == "panel.php" || $file == "dictionary.php") echo '<link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.min.css">';
+        if ($file == "index.php" || $file == "panel.php" || $file == "dictionary.php" || $file == "wordle.php") echo '<link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.min.css">';
         ?>
     </head>
     <body class="d-flex flex-column min-vh-100">

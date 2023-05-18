@@ -1,6 +1,5 @@
-import { WORDS } from "./words.js";
-
-const NUMBER_OF_GUESSES = 6; // Количество попыток
+let NUMBER_OF_GUESSES = 6; // Количество попыток
+let LETTERS_IN_WORD = 5; // Количество букв в слове
 const COLORS = Object.freeze({ // Цвета ячеек с буквами
     ABSENT: '#a4aec4', // Буквы нет в слове
     PRESENT: '#f3c237', // Буква на другом месте
@@ -12,6 +11,8 @@ let currentGuess = []; // Текущий ответ
 let currentLetter = -1; // Индекс текущей буквы
 let answer = ""; // Загаданное слово
 
+let surrenderButton = $("#btn-surrender");
+
 $(document).ready(function () {
     // bootstrap toast сообщения
     let toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -19,16 +20,43 @@ $(document).ready(function () {
         return new bootstrap.Toast(toastEl)
     });
 
-    //$("#toast-info").toast("show");
+    let guideModal = new bootstrap.Modal(document.getElementById("guideModal"));
+    let settingsModal = new bootstrap.Modal(document.getElementById("settingsModal"));
+
+    surrenderButton.click(function (){
+        guessesRemaining = 0;
+        showLoseScreen();
+    });
+
+    $("#btn-settings").click(function () {
+        settingsModal.show();
+    });
+
+    $("#btn-help").click(function () {
+        guideModal.show();
+    });
+
+    $("#settingsForm").submit(function (event) {
+        event.preventDefault(); // Отменяем стандартное поведение формы
+        NUMBER_OF_GUESSES = parseInt($("#numberOfGuesses").find(':selected').val());
+        LETTERS_IN_WORD = parseInt($("#lettersInWord").find(':selected').val());
+        language = $("#select-language").find(':selected').val();
+        patternBase = languages[language].regexp;
+        newGame();
+        console.log(NUMBER_OF_GUESSES);
+        console.log(LETTERS_IN_WORD);
+        console.log(language);
+    });
 
     // Нажатие на кнопку клавиатуры
     document.addEventListener("keyup", (e) => {
         if (guessesRemaining === 0) return;
 
+        let pattern = makePattern(patternBase, "[", "]", "gi");
         let pressedKey = String(e.key);
         if (pressedKey === "Backspace" && currentLetter !== -1) deleteLetter();
         else if (pressedKey === "Enter") checkGuess();
-        else if (pressedKey.length === 1 && pressedKey.match(/[а-я]/gi)) insertLetter(pressedKey);
+        else if (pressedKey.length === 1 && pressedKey.match(pattern)) insertLetter(pressedKey);
     });
 
     // Нажатие на кнопку клавиатуры на сайте
@@ -49,10 +77,35 @@ $(document).ready(function () {
     initGame();
 });
 
+function requestWord() {
+    loadingMessage.text("Выбираем слово. Пожалуйста, подождите...");
+
+    $.ajax({
+        url: 'core/wordle.php',
+        method: 'GET',
+        dataType: 'json',
+        contentType: false,
+        cache: false,
+        data: {language: language, length: LETTERS_IN_WORD},
+        success: function (response) {
+            // Выводим результаты запроса
+            if (response.status === false) {
+                alert(response.message);
+            } else {
+                answer = response.word;
+                console.log(answer);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseText); // выводим ответ сервера
+            console.log('Error: ' + textStatus + ' - ' + errorThrown);
+        }
+    });
+}
+
 // Инициализация игры
 function initGame() {
-    answer = WORDS[Math.floor(Math.random() * WORDS.length)];
-    console.log(answer);
+    requestWord();
 
     // Создание html-элемента игры
     let board = document.getElementById("game-board");
@@ -61,7 +114,7 @@ function initGame() {
         let row = document.createElement("div");
         row.className = "game-row";
 
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < LETTERS_IN_WORD; j++) {
             let letter = document.createElement("div");
             letter.className = "letter";
             row.appendChild(letter);
@@ -73,6 +126,7 @@ function initGame() {
 
 // Новая игра
 function newGame() {
+    surrenderButton.prop('disabled', true);
     guessesRemaining = NUMBER_OF_GUESSES;
     currentGuess = [];
     currentLetter = -1;
@@ -98,6 +152,20 @@ function colorKeyboard(letter, color) {
     }
 }
 
+// Ввести в текущую ячейку нажатую кнопку
+function insertLetter(pressedKey) {
+    if (currentLetter === LETTERS_IN_WORD - 1) return; // Больше букв ввести нельзя
+    pressedKey = pressedKey.toLowerCase();
+
+    let row = document.getElementsByClassName("game-row")[NUMBER_OF_GUESSES - guessesRemaining];
+    let letter = row.children[currentLetter + 1];
+    animateCSS(letter, "pulse");
+    letter.textContent = pressedKey;
+    letter.classList.add("filled-letter");
+    currentGuess.push(pressedKey);
+    ++currentLetter;
+}
+
 // Удалить последнюю введённую букву из слова
 function deleteLetter() {
     let row = document.getElementsByClassName("game-row")[NUMBER_OF_GUESSES - guessesRemaining];
@@ -116,22 +184,17 @@ function checkGuess() {
 
     for (const val of currentGuess) guessString += val;
 
-    if (guessString.length !== 5) {
+    if (guessString.length !== LETTERS_IN_WORD) {
         $("#message-info").text("Недостаточно букв");
         $("#toast-info").toast("show");
         return;
     }
 
-    if (!WORDS.includes(guessString)) {
-        $("#message-info").text("Слово не найдено");
-        $("#toast-info").toast("show");
-        return;
-    }
-
+    if (surrenderButton.prop('disabled')) surrenderButton.prop('disabled', false);
     let letterColor = [COLORS.ABSENT, COLORS.ABSENT, COLORS.ABSENT, COLORS.ABSENT, COLORS.ABSENT];
 
     // Проверка на то, находится ли буква на правильном месте
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < LETTERS_IN_WORD; i++) {
         if (rightGuess[i] === currentGuess[i]) {
             letterColor[i] = COLORS.CORRECT;
             rightGuess[i] = "#";
@@ -139,10 +202,10 @@ function checkGuess() {
     }
 
     // Проверка на то, есть ли введённая буква в загаданном слове
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < LETTERS_IN_WORD; i++) {
         if (letterColor[i] === COLORS.CORRECT) continue;
 
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < LETTERS_IN_WORD; j++) {
             if (rightGuess[j] === currentGuess[i]) {
                 letterColor[i] = COLORS.PRESENT;
                 rightGuess[j] = "#";
@@ -151,7 +214,7 @@ function checkGuess() {
     }
 
     // Анимация введённого ответа
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < LETTERS_IN_WORD; i++) {
         let letter = row.children[i];
         let delay = 250 * i;
         setTimeout(() => {
@@ -172,24 +235,14 @@ function checkGuess() {
         currentLetter = -1;
 
         if (guessesRemaining === 0) { // Поражение: осталось 0 попыток
-            $("#message-lose").text("Загаданное слово: " + answer);
-            $("#toast-lose").toast("show");
+           showLoseScreen();
         }
     }
 }
 
-// Ввести в текущую ячейку нажатую кнопку
-function insertLetter(pressedKey) {
-    if (currentLetter === 4) return; // Больше ввести нельзя: уже введено 5 букв
-    pressedKey = pressedKey.toLowerCase();
-
-    let row = document.getElementsByClassName("game-row")[NUMBER_OF_GUESSES - guessesRemaining];
-    let letter = row.children[currentLetter + 1];
-    animateCSS(letter, "pulse");
-    letter.textContent = pressedKey;
-    letter.classList.add("filled-letter");
-    currentGuess.push(pressedKey);
-    ++currentLetter;
+function showLoseScreen() {
+    $("#message-lose").text("Загаданное слово: " + answer);
+    $("#toast-lose").toast("show");
 }
 
 // Анимация букв
@@ -212,14 +265,3 @@ const animateCSS = (element, animation, prefix = "animate__") =>
 
         node.addEventListener("animationend", handleAnimationEnd, { once: true });
     });
-
-// Окончание слова в зависимости от количества
-function getNoun(number, one, two, five) {
-    let n = Math.abs(number);
-    n %= 100;
-    if (n >= 5 && n <= 20) return five;
-    n %= 10;
-    if (n === 1) return one;
-    if (n >= 2 && n <= 4) return two;
-    return five;
-}

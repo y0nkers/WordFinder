@@ -6,13 +6,18 @@ require __DIR__ . '/header.php';
 
 <main class="container-fluid container-xl">
     <div class="pt-5 pb-3">
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="p-3 mb-3 field-bg rounded-3">
+        <!-- Открыть инструкцию по применению -->
+        <div class="modal fade" id="guideModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content field-bg">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="guideModalLabel">WordFinder: Как играть в Wordle</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <h1>Игра Wordle - разгадай слово</h1>
                         <p>Wordle – это словесная головоломка, в которой Вы должны угадать слово из 5 букв за шесть попыток или менее.</p>
-                        <h2 class="text-center">Как играть в Wordle?</h2>
+                        <h2>Как играть в Wordle?</h2>
                         <h3>1. Введите первое слово</h3>
                         <p>Для начала просто введите любое слово из пяти букв, чтобы узнать, какие буквы соответствуют скрытому слову. Всего у вас будет 6 попыток отгадать спрятанное слово.</p>
                         <h3>2. Узнайте, какие буквы в загаданном слове</h3>
@@ -20,12 +25,75 @@ require __DIR__ . '/header.php';
                         <h3>3. Попробуйте угадать спрятанное слово</h3>
                         <p>Теперь, если вы знаете несколько букв с точным расположением (зеленые) и несколько букв, которые входят в слово (желтые), вы можете попытаться разгадать загаданное слово и выиграть игру!</p>
                         <img src="assets/img/wordle-how-to.jpg" class="img-fluid rounded mx-auto d-block" alt="Как играть">
-                     </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Понятно</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Открыть инструкцию по применению -->
+        <div class="modal fade" id="settingsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content field-bg">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="settingsModalLabel">Настройки Wordle</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="settingsForm">
+                        <div class="modal-body">
+                            <div class="row align-items-center mb-3">
+                                <div class="form-group col-sm-4">
+                                    <label for="numberOfGuesses">Количество попыток: </label>
+                                    <select class="form-select" name="numberOfGuesses" id="numberOfGuesses" aria-label="Number of guesses">
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6" selected>6</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="lettersInWord">Количество букв в слове: </label>
+                                    <select class="form-select" name="lettersInWord" id="lettersInWord" aria-label="Number of letters in word">
+                                        <option value="5" selected>5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="select-language">Язык поиска: </label>
+                                    <select class="form-select" name="select-language" id="select-language" aria-label="Select dictionary's language" required>
+                                        <option disabled selected>Пожалуйста, подождите</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Сохранить</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
         <div class="game-container mt-5">
+            <!-- Панель управления -->
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="d-flex justify-content-start">
+                        <button id="btn-surrender" class="btn btn-danger" disabled>Сдаться</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex justify-content-end">
+                        <button id="btn-settings" class="btn btn-secondary me-2"><i class="fas fa-cog" aria-hidden="true"></i></button>
+                        <button id="btn-help" class="btn btn-secondary"><i class="fas fa-question" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
             <!-- Toast победа -->
             <div class="toast-container position-absolute p-3 top-50 start-50 translate-middle">
                 <div class="toast" id="toast-win" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
@@ -98,7 +166,7 @@ require __DIR__ . '/header.php';
                     <button class="keyboard-button" data-key="э">э</button>
                 </div>
                 <div class="keyboard-row">
-                    <button class="keyboard-button keyboard-button-wide" data-key="Backspace"><svg xmlns="http://www.w3.org/2000/svg" data-key="Backspace" height="24" viewBox="0 0 24 24" width="24" class="game-icon" data-testid="icon-backspace"><path data-key="Backspace" fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path></svg></button>
+                    <button class="keyboard-button keyboard-button-wide" data-key="Backspace"><svg xmlns="http://www.w3.org/2000/svg" data-key="Backspace" height="24" viewBox="0 0 24 24" width="24"><path data-key="Backspace" fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path></svg></button>
                     <button class="keyboard-button" data-key="я">я</button>
                     <button class="keyboard-button" data-key="ч">ч</button>
                     <button class="keyboard-button" data-key="с">с</button>
