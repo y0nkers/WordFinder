@@ -46,3 +46,6 @@ CREATE USER 'admin'@'localhost' IDENTIFIED BY 'wordfinder';
 GRANT SELECT ON wordfinder.* TO 'user'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON `wordfinder`.* TO `admin`@`localhost`;
 GRANT FILE ON *.* TO `admin`@`localhost`;
+
+// Создание таблицы пользователей
+CREATE TABLE `wordfinder`.`users` ( `login` VARCHAR(16) NOT NULL , `email` VARCHAR(64) NOT NULL , `password` VARCHAR(32) NOT NULL , `reset_key` VARCHAR(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL , PRIMARY KEY (`login`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
