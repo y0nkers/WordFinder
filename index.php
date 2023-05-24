@@ -145,7 +145,7 @@ require __DIR__ . '/header.php';
                         <div class="card border border-dark">
                             <div class="card-header bg-dark text-white">Поиск слов</div>
                             <div class="card-body rounded-3 field-bg">
-                                <form id="search-form">
+                                <form id="search-form" <?php if (isset($_SESSION['user'])) echo 'data-id="' . $_SESSION['user']['id'] . '"'?>>
                                     <div class="row align-items-center mb-3">
                                         <div class="form-group col-sm-6">
                                             <label>Режим поиска:</label><br>

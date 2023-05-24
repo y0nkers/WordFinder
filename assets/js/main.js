@@ -14,6 +14,9 @@ $(document).ready(function () {
     $("#search-form").submit(function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
 
+        let userid = -1;
+        if (this.dataset.id) userid = this.dataset.id;
+
         let language = $("#select-language").val();
 
         let dictionaries = $("#select-dictionaries").val();
@@ -41,7 +44,7 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: false,
             cache: false,
-            data: {dictionaries: dictionaries, language: language, mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
+            data: {userid: userid, dictionaries: dictionaries, language: language, mode: mode, data: JSON.stringify(data), limit: limit, compound_words: compound_words},
             success: function (response) {
                 // Выводим результаты запроса
                 if (response.status === false) {
@@ -70,8 +73,6 @@ $(document).ready(function () {
     $("input[type=radio][name=mode]").change(function () {
         checkForMode(this);
     });
-
-    checkForMode(document.getElementById("mode-normal"));
 
     // Переход между страницами результатов запроса
     $(document).on("click", ".pagination a", function (e) {
@@ -160,6 +161,16 @@ $(document).ready(function () {
         clearSearchForm();
         loading.hide();
     });
+
+    checkForMode(document.getElementById("mode-normal"));
+
+    loadLanguages().then(_ => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.size > 0) parseParams(urlParams);
+        console.log(urlParams);
+    });
+
 });
 
 // Получение списка словарей определённого языка
@@ -259,13 +270,13 @@ function hasDuplicates(str1, str2) {
 
 // Валидация всех полей, введённых пользователем
 function validateData(mode) {
-    let data = [];
+    let data = {};
     if (mode === 'normal') {
         let mask = $("#mask").val();
         let pattern = makePattern(patternBase, "^[", "?*]+$", "i"); // /^[a-zA-Z?*]+$/i;
         if (!validateField("Маска слова", mask, pattern)) return;
 
-        data = [mask];
+        data = {"mask": mask};
     } else if (mode === 'extended') {
         let length = $("#length").val(), start = $("#start").val(), end = $("#end").val(),
             contains = $("#contains").val(), include = $("#include").val(), exclude = $("#exclude").val();
@@ -288,11 +299,52 @@ function validateData(mode) {
             alert('Буквы в полях "Обязательные буквы" и "Исключённые буквы" должны различаться!');
             return;
         }
-        data = [length, start, end, contains, include, exclude];
+
+        if (length) data["length"] = length;
+        if (start) data["start"] = start;
+        if (end) data["end"] = end;
+        if (contains) data["contains"] = contains;
+        if (include) data["include"] = include;
+        if (exclude) data["exclude"] = exclude;
     } else if (mode === 'regexp') {
         let regexp = $("#regexp").val();
 
-        data = [regexp];
+        data = {"regexp": regexp};
     }
     return data;
+}
+
+// Вставка в поля ввода параметров из строки запроса
+function parseParams(urlParams) {
+    // Установка режима поиска
+    let mode = "mode-" + urlParams.get("mode");
+    $('#' + mode).prop("checked", true);
+    checkForMode(document.getElementById(mode));
+
+    // Установка языка поиска
+    let language = urlParams.get("language");
+    $("#select-language").val(language).change();
+
+    // Искать или нет составные слова
+    let compound_words = urlParams.get("compound_words");
+    console.log(compound_words);
+    if (compound_words !== 1) $("#compound-words-checkbox").prop("checked", false);
+
+    // Вставляем в поля имеющиеся в строке параметры в зависимости от режима
+    switch (mode) {
+        case "mode-normal":
+            $("#mask").val(urlParams.get("mask"));
+            break;
+        case "mode-extended":
+            if (urlParams.has("start")) $("#start").val(urlParams.get("start"));
+            if (urlParams.has("end")) $("#end").val(urlParams.get("end"));
+            if (urlParams.has("length")) $("#length").val(urlParams.get("length"));
+            if (urlParams.has("contains")) $("#contains").val(urlParams.get("contains"));
+            if (urlParams.has("include")) $("#include").val(urlParams.get("include"));
+            if (urlParams.has("exclude")) $("#exclude").val(urlParams.get("exclude"));
+            break;
+        case "mode-regexp":
+            $("#regexp").val(urlParams.get("regexp"));
+            break;
+    }
 }

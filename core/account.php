@@ -43,7 +43,7 @@ if ($type == "register") {
 
     try {
         $password = md5($password);
-        $stmt = $pdo->prepare("SELECT login, email FROM users WHERE login = :login AND password = :password");
+        $stmt = $pdo->prepare("SELECT id, login, email FROM users WHERE login = :login AND password = :password");
         $stmt->bindParam(':login', $login);
         $stmt->bindParam(':password', $password);
         $stmt->execute();
@@ -56,8 +56,7 @@ if ($type == "register") {
     $user = $stmt->fetch();
 
     $_SESSION["user"] = [
-        "login" => $user["login"],
-        "email" => $user["email"]
+        "id" => (int)$user["id"]
     ];
 } else if ($type == "forget") {
     $email = $_POST['email'];

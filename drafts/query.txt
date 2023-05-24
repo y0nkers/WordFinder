@@ -41,11 +41,27 @@ SELECT word FROM words WHERE word LIKE "%нефт%"
 UNION
 SELECT word FROM test WHERE word LIKE "%нефт%"
 
+// Создание таблицы пользователей
+CREATE TABLE `users` (
+  `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `login` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE KEY,
+  `email` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reset_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+// Создание таблицы истории поиска пользователей
+CREATE TABLE `users_history` (
+  `user_id` int NOT NULL,
+  `search_string` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+// Учетные записи и разрешения
 CREATE USER 'user'@'localhost' IDENTIFIED BY '';
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'wordfinder';
 GRANT SELECT ON wordfinder.* TO 'user'@'localhost';
+GRANT SELECT, INSERT, DELETE ON `wordfinder`.`users_history` TO `user`@`localhost`;
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON `wordfinder`.* TO `admin`@`localhost`;
 GRANT FILE ON *.* TO `admin`@`localhost`;
-
-// Создание таблицы пользователей
-CREATE TABLE `wordfinder`.`users` ( `login` VARCHAR(16) NOT NULL , `email` VARCHAR(64) NOT NULL , `password` VARCHAR(32) NOT NULL , `reset_key` VARCHAR(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL , PRIMARY KEY (`login`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
