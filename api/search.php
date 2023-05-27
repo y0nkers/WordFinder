@@ -50,7 +50,7 @@ http_response_code(200);
 if ($stmt->rowCount() <= 0) echo json_encode(array('message' => 'Не найдены подходящие результаты для указанного запроса.'));
 else {
     $response = array();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $response[] = $row;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $response[] = $row["word"];
     echo json_encode(array('words' => $response));
 }
 
