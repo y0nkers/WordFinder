@@ -47,7 +47,8 @@ CREATE TABLE `users` (
   `login` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE KEY,
   `email` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reset_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `reset_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `api_key` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 // Создание таблицы истории поиска пользователей
@@ -55,7 +56,8 @@ CREATE TABLE `users_history` (
   `user_id` int NOT NULL,
   `search_string` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES users(id)
+  KEY `users_history_ibfk_1` (`user_id`),
+  CONSTRAINT `users_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 // Учетные записи и разрешения

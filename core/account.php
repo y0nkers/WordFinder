@@ -22,10 +22,12 @@ if ($type == "register") {
 
     try {
         $password = md5($password);
-        $stmt = $pdo->prepare("INSERT INTO `users` (`login`, `email`, `password`) VALUES (:login, :email, :password)");
+        $apiKey = hash('sha256', $login . time());
+        $stmt = $pdo->prepare("INSERT INTO `users` (`login`, `email`, `password`, `api_key`) VALUES (:login, :email, :password, :apikey)");
         $stmt->bindParam(':login', $login);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':apikey', $apiKey);
         $stmt->execute();
     } catch (PDOException $e) {
         errorHandler("Ошибка при регистрации. Возможно, указанный логин уже используется.");
@@ -43,7 +45,7 @@ if ($type == "register") {
 
     try {
         $password = md5($password);
-        $stmt = $pdo->prepare("SELECT id, login, email FROM users WHERE login = :login AND password = :password");
+        $stmt = $pdo->prepare("SELECT id, login, email, api_key FROM users WHERE login = :login AND password = :password");
         $stmt->bindParam(':login', $login);
         $stmt->bindParam(':password', $password);
         $stmt->execute();

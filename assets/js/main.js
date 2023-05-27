@@ -168,7 +168,6 @@ $(document).ready(function () {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         if (urlParams.size > 0) parseParams(urlParams);
-        console.log(urlParams);
     });
 
 });

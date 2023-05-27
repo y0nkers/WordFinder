@@ -8,7 +8,7 @@ require_once "class/DbConnect.php";
 $dbConnect = new DbConnect("user", "");
 $pdo = $dbConnect->getPDO();
 
-$stmt = $pdo->prepare("SELECT id, login, email FROM users WHERE id = :id");
+$stmt = $pdo->prepare("SELECT id, login, email, api_key FROM users WHERE id = :id");
 $stmt->bindParam(':id', $_SESSION['user']['id'], PDO::PARAM_INT);
 $stmt->execute();
 
@@ -17,6 +17,7 @@ $_SESSION['user'] = [
     "id" => $user['id'],
     "login" => $user['login'],
     "email" => $user['email'],
+    "api_key" => $user["api_key"]
 ];
 
 $stmt = $pdo->prepare("SELECT search_string, created_at FROM `users_history` WHERE user_id = :userid");
@@ -56,17 +57,20 @@ require __DIR__ . '/header.php';
                         <div class="card-header bg-dark text-white">Личный кабинет</div>
                         <div class="card-body rounded-3 field-bg">
                             <div class="row align-items-center">
-                                <div class="form-group col-sm-4">
-                                    <h4>Логин</h4>
-                                    <p><?= $_SESSION['user']['login'] ?></p>
+                                <div class="form-group col-sm-6">
+                                    <span class="fs-4 fw-bold">Ваш логин:</span>
+                                    <span class="fs-4"><?= $_SESSION['user']['login'] ?></span>
+                                    <br>
+                                    <span class="fs-4 fw-bold">Ваш email:</span>
+                                    <span class="fs-4"><?= $_SESSION['user']['email'] ?></span>
                                 </div>
-                                <div class="form-group col-sm-4">
-                                    <h4>Email</h4>
-                                    <p><?= $_SESSION['user']['email'] ?></p>
+                                <div class="form-group col-sm-6">
+                                    <span class=" fs-4 fw-bold">Ваш API key: </span>
+                                    <span class="fs-5"><?= $_SESSION['user']['api_key'] ?></span>
                                 </div>
-                                <div class="form-group col-sm-4">
-                                    <a href="/core/logout.php">Выйти</a>
-                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <a class="fs-4 fw-bold" href="/core/logout.php">Выйти</a>
                             </div>
                             <div class="row align-items-center mt-3">
                                 <div class="form-group col-12">
