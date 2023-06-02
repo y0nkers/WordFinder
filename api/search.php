@@ -58,53 +58,53 @@ else {
 function parseBodyParameters(array $body, PDO $pdo): array
 {
     // дефолтные проверки на существование параметров и соответствие необходимому типу
-    $dictionaries = getParam($body['dictionaries'], "Словари поиска (dictionaries)");
+    $dictionaries = $body['dictionaries'] ?? sendError("Отсутствует необходимый параметр: Словари поиска (dictionaries)");
     if (!is_array($dictionaries)) sendError("Словари поиска (dictionaries) должны передаваться в виде массива целых чисел");
     foreach ($dictionaries as $dictionary) if (!is_int($dictionary)) sendError("Словари поиска (dictionaries) должны передаваться в виде массива целых чисел");
 
-    $language = getParam($body['language'], "Язык поиска (language)");
+    $language = $body['language'] ?? sendError("Отсутствует необходимый параметр: Язык поиска (language)");
     if (!is_string($language)) sendError("Язык поиска (language) должен быть строкового типа");
 
-    $compound_words = getParam($body['compound_words'], "Поиск составных слов (compound_words)");
-    if (!is_bool($compound_words)) sendError('Параметр "Поиск составных слов" (compound_words) должен быть типа bool');
+    $compound_words = $body['compound_words'] ??  sendError("Отсутствует необходимый параметр: Поиск составных слов (compound_words)");
+    if (!is_bool($compound_words)) sendError("Параметр 'Поиск составных слов' (compound_words) должен быть типа bool");
 
-    $mode = getParam($body['mode'], "Режим поиска (mode)");
+    $mode = $body['mode'] ?? sendError("Отсутствует необходимый параметр: Режим поиска (mode)");
     if (!is_string($mode)) sendError("Режим поиска (mode) должен быть строкового типа");
 
-    $parameters = getParam($body['parameters'], "Параметры поиска (parameters[])");
+    $parameters = $body['parameters'] ?? sendError("Отсутствует необходимый параметр: Параметры поиска (parameters[])");
     if (!is_array($parameters)) sendError("Параметры поиска (parameters[]) должны передаваться в виде массива");
 
     $data_parsed = array();
     if ($mode == "normal") {
-        $mask = getParam($parameters["mask"], "Маска слова (mask)");
-        if (!is_string($mask)) sendError('Параметр "Маска слова" (mask) должен быть строкового типа');
+        $mask = $parameters["mask"] ?? sendError("Отсутствует необходимый параметр: Маска слова (mask)");
+        if (!is_string($mask)) sendError("Параметр 'Маска слова' (mask) должен быть строкового типа");
         $data_parsed["mask"] = $mask;
     }
     else if ($mode == "extended") {
         $start = ''; $end = ''; $length = 0; $contains = ''; $include = ''; $exclude = '';
         if (isset($parameters['start'])) {
             $start = $parameters['start'];
-            if (!is_string($start)) sendError('Параметр "Начало слова" (start) должен быть строкового типа');
+            if (!is_string($start)) sendError("Параметр 'Начало слова' (start) должен быть строкового типа");
         }
         if (isset($parameters['end'])) {
             $end = $parameters['end'];
-            if (!is_string($end)) sendError('Параметр "Конец слова" (start) должен быть строкового типа');
+            if (!is_string($end)) sendError("Параметр 'Конец слова' (start) должен быть строкового типа");
         }
         if (isset($parameters['length'])) {
             $length = $parameters['length'];
-            if (!is_int($length)) sendError('Параметр "Длина слова" (start) должен быть целочисленного типа');
+            if (!is_int($length)) sendError("Параметр 'Длина слова' (start) должен быть целочисленного типа");
         }
         if (isset($parameters['contains'])) {
             $contains = $parameters['contains'];
-            if (!is_string($contains)) sendError('Параметр "Обязательное буквосочетание" (contains) должен быть строкового типа');
+            if (!is_string($contains)) sendError("Параметр 'Обязательное буквосочетание' (contains) должен быть строкового типа");
         }
         if (isset($parameters['include'])) {
             $include = $parameters['include'];
-            if (!is_string($include)) sendError('Параметр "Обязательные буквы" (include) должен быть строкового типа');
+            if (!is_string($include)) sendError("Параметр 'Обязательные буквы' (include) должен быть строкового типа");
         }
         if (isset($parameters['exclude'])) {
             $exclude = $parameters['exclude'];
-            if (!is_string($exclude)) sendError('Параметр "Исключённые буквы" (exclude) должен быть строкового типа');
+            if (!is_string($exclude)) sendError("Параметр 'Исключённые буквы' (exclude) должен быть строкового типа");
         }
 
         $data_parsed = array(
@@ -116,8 +116,8 @@ function parseBodyParameters(array $body, PDO $pdo): array
             'exclude' => $exclude,
         );
     } else if ($mode == "regexp") {
-        $regexp = getParam($parameters["regexp"], "Регулярное выражение (regexp)");
-        if (!is_string($regexp)) sendError('Параметр "Регулярное выражение" (regexp) должен быть строкового типа');
+        $regexp = $parameters["regexp"] ?? sendError("Отсутствует необходимый параметр: Регулярное выражение (regexp)");
+        if (!is_string($regexp)) sendError("Параметр 'Регулярное выражение' (regexp) должен быть строкового типа");
         $data_parsed["regexp"] = $regexp;
     }
     else sendError("Некорректное значение режима поиска (mode)");
@@ -140,11 +140,6 @@ function parseBodyParameters(array $body, PDO $pdo): array
     if (count($foundLanguages) != 1) sendError("Переданные словари имеют разные языки. Используйте словари только одного языка");
 
     return $data_parsed;
-}
-
-function getParam($param, $name) {
-    if (empty($param)) sendError('Отсутствует необходимый параметр: ' . $name);
-    return $param;
 }
 
 function sendError($error) {
